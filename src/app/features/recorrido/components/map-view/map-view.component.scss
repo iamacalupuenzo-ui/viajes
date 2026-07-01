@@ -1,4 +1,6 @@
-:host {
+// Con ViewEncapsulation.None, :host no siempre matchea el custom element
+// en todos los browsers mobile. Usamos el selector explícito.
+app-map-view {
   display: flex;
   flex-direction: column;
   flex: 1;
