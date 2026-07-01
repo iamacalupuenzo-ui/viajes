@@ -37,46 +37,40 @@
           [class.recorrido__trip-chip--active]="activeId() === id"
           (click)="selectViaje(id)"
           type="button"
-        >
-          {{ tripLabel(i) }}
-        </button>
+        >{{ tripLabel(i) }}</button>
       }
     </div>
   }
 
-  <!-- Unit info -->
+  <!-- Unit info + filter en la misma fila, rating debajo -->
   @if (activeRecorrido(); as r) {
     <div class="recorrido__unit">
-      <div class="recorrido__unit-left">
+      <div class="recorrido__unit-info">
         <span class="recorrido__unit-placa">{{ r.placa }}</span>
         <span class="recorrido__unit-gps">{{ r.codigoMotor }}</span>
       </div>
-      <span class="recorrido__unit-rating">
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
-          <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
+      <button
+        class="recorrido__filter-chip"
+        [class.recorrido__filter-chip--active]="activeFilterCount() > 0"
+        (click)="sheetOpen.set(true)"
+        type="button"
+      >
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
-        {{ r.rating }}
-      </span>
+        Eventos
+        @if (activeFilterCount() > 0) {
+          <span class="recorrido__filter-badge">{{ activeFilterCount() }}</span>
+        }
+      </button>
+    </div>
+    <div class="recorrido__unit-meta">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
+        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
+      </svg>
+      <span class="recorrido__unit-rating-val">{{ r.rating }}</span>
     </div>
   }
-
-  <!-- Filter chip -->
-  <div class="recorrido__filter-bar">
-    <button
-      class="recorrido__filter-chip"
-      [class.recorrido__filter-chip--active]="activeFilterCount() > 0"
-      (click)="sheetOpen.set(true)"
-      type="button"
-    >
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      Eventos
-      @if (activeFilterCount() > 0) {
-        <span class="recorrido__filter-badge">{{ activeFilterCount() }}</span>
-      }
-    </button>
-  </div>
 
   <!-- Map -->
   @if (activeTab() === 'mapa') {
@@ -106,24 +100,26 @@
     <div
       class="recorrido__sheet"
       role="dialog"
-      aria-label="Filtrar eventos"
-      [style.transform]="dragY() > 0 ? 'translateY(' + dragY() + 'px)' : null"
-      [style.transition]="isDragging() ? 'none' : null"
+      aria-label="Filtrar por tipo de evento"
+      [style.transform]="dragY() > 0 ? 'translateY(' + dragY() + 'px)' : ''"
+      [style.transition]="isDragging() ? 'none' : ''"
     >
-      <!-- Drag handle -->
+      <!-- Handle touch area -->
       <div
-        class="recorrido__sheet-handle"
+        class="recorrido__sheet-handle-area"
         (touchstart)="onDragStart($event)"
         (touchmove)="onDragMove($event)"
         (touchend)="onDragEnd()"
-      ></div>
+      >
+        <div class="recorrido__sheet-handle"></div>
+      </div>
 
-      <!-- Sheet header -->
+      <!-- Header: título + Limpiar selección -->
       <div class="recorrido__sheet-header">
         <span class="recorrido__sheet-title">Tipo de evento</span>
         <button
           class="recorrido__sheet-clear"
-          [class.recorrido__sheet-clear--visible]="activeFilterCount() > 0"
+          [class.recorrido__sheet-clear--active]="activeFilterCount() > 0"
           (click)="clearFilter()"
           type="button"
         >Limpiar</button>
@@ -131,7 +127,7 @@
 
       <!-- Items -->
       <div class="recorrido__sheet-list">
-        @for (item of sheetItems; track item.tipo; let last = $last) {
+        @for (item of sheetItems; track item.tipo) {
           <div
             class="recorrido__sheet-row"
             [class.recorrido__sheet-row--checked]="isTypeSelected(item.tipo)"
@@ -150,23 +146,21 @@
             @if (eventCounts()[item.tipo]) {
               <span class="recorrido__sheet-count">{{ eventCounts()[item.tipo] }}</span>
             } @else {
-              <span class="recorrido__sheet-count recorrido__sheet-count--zero">sin eventos</span>
+              <span class="recorrido__sheet-count recorrido__sheet-count--zero">0</span>
             }
           </div>
-          @if (!last) {
-            <div class="recorrido__sheet-divider"></div>
-          }
         }
       </div>
 
       <!-- Footer -->
       <div class="recorrido__sheet-footer">
-        <button class="recorrido__sheet-apply" (click)="applySheet()" type="button">
-          @if (activeFilterCount() > 0) {
-            Aplicar ({{ activeFilterCount() }} seleccionados)
-          } @else {
-            Aplicar
-          }
+        <button
+          class="recorrido__sheet-apply"
+          (click)="applySheet()"
+          [disabled]="activeFilterCount() === 0"
+          type="button"
+        >
+          Aplicar ({{ activeFilterCount() }} seleccionados)
         </button>
       </div>
     </div>
