@@ -42,10 +42,18 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
-      // Double rAF: first frame schedules paint, second fires after layout is complete
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          this.map = L.map(this.mapEl.nativeElement, {
+          const el = this.mapEl.nativeElement;
+
+          // Si el contenedor aún no tiene height (mobile con scroll container),
+          // lo leemos del parent y lo forzamos explícitamente antes de crear el mapa.
+          if (el.offsetHeight === 0) {
+            const parentH = el.parentElement?.offsetHeight ?? 0;
+            if (parentH > 0) el.style.height = parentH + 'px';
+          }
+
+          this.map = L.map(el, {
             zoomControl: false,
             attributionControl: false,
           });

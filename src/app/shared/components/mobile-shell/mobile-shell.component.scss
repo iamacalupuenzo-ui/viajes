@@ -50,5 +50,12 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
+    // En rutas fullscreen (mapa) el overflow-y: auto impide que flex
+    // propague altura hacia abajo → Leaflet ve height:0 en mobile.
+    // overflow: hidden restaura el modelo correcto de flex sizing.
+    &--clip {
+      overflow: hidden;
+    }
   }
 }
