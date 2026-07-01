@@ -58,11 +58,6 @@ export class RecorridoPageComponent implements OnInit {
     return recorrido.eventos.filter(e => e.tipo === filter);
   });
 
-  readonly unitLabel = computed(() => {
-    const r = this.activeRecorrido();
-    if (!r) return '';
-    return `${r.placa} · GPS${r.codigoMotor.slice(-4)}`;
-  });
 
   ngOnInit(): void {
     const raw = this.route.snapshot.queryParamMap.get('ids') ?? '';

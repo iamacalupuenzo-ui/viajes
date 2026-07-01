@@ -42,22 +42,23 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
-      this.map = L.map(this.mapEl.nativeElement, {
-        zoomControl: false,
-        attributionControl: false,
+      // Double rAF: first frame schedules paint, second fires after layout is complete
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.map = L.map(this.mapEl.nativeElement, {
+            zoomControl: false,
+            attributionControl: false,
+          });
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+          }).addTo(this.map);
+
+          L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+
+          this.renderLayers(this.recorrido(), this.eventos());
+        });
       });
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-      }).addTo(this.map);
-
-      L.control.zoom({ position: 'bottomright' }).addTo(this.map);
-
-      // Defer so the flex container has its final dimensions
-      setTimeout(() => {
-        this.map!.invalidateSize();
-        this.renderLayers(this.recorrido(), this.eventos());
-      }, 80);
     });
   }
 

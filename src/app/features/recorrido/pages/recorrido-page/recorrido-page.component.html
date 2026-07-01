@@ -29,17 +29,20 @@
   </div>
 
   <!-- Unit info -->
-  <div class="recorrido__unit">
-    <span class="recorrido__unit-name">{{ unitLabel() }}</span>
-    @if (activeRecorrido(); as r) {
+  @if (activeRecorrido(); as r) {
+    <div class="recorrido__unit">
+      <div class="recorrido__unit-left">
+        <span class="recorrido__unit-placa">{{ r.placa }}</span>
+        <span class="recorrido__unit-gps">{{ r.codigoMotor }}</span>
+      </div>
       <span class="recorrido__unit-rating">
         <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
           <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
         </svg>
         {{ r.rating }}
       </span>
-    }
-  </div>
+    </div>
+  }
 
   <!-- Trip selector -->
   @if (viajeIds().length > 1) {
@@ -79,12 +82,14 @@
     </div>
   </div>
 
-  <!-- Map view -->
+  <!-- Map view — wrapper con isolation: isolate confina los z-indexes internos de Leaflet -->
   @if (activeTab() === 'mapa') {
-    <app-map-view
-      [recorrido]="activeRecorrido()"
-      [eventos]="filteredEventos()"
-    />
+    <div class="recorrido__map-wrapper">
+      <app-map-view
+        [recorrido]="activeRecorrido()"
+        [eventos]="filteredEventos()"
+      />
+    </div>
   }
 
   <!-- Historial placeholder -->

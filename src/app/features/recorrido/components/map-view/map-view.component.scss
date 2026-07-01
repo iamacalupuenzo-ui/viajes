@@ -1,15 +1,15 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
-  position: relative;
   overflow: hidden;
-  z-index: 1;
 }
 
 .map-container {
-  position: absolute;
-  inset: 0;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 // ── Custom markers ────────────────────────────────────────────────────────────
