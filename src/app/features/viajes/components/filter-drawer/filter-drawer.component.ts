@@ -39,7 +39,7 @@ export class FilterDrawerComponent implements OnChanges {
       ? this.allUnits.filter(u =>
           u.placa.toLowerCase().includes(q) ||
           u.modelo.toLowerCase().includes(q) ||
-          u.codigoMotor.toLowerCase().includes(q))
+          u.codigoMotor.includes(q))
       : this.allUnits;
   });
 
@@ -47,13 +47,9 @@ export class FilterDrawerComponent implements OnChanges {
   selectedCount = computed(() => this.selectedIds().size);
   canApply = computed(() => this.selectedIds().size > 0);
 
-  isSelected(id: string): boolean {
-    return this.selectedIds().has(id);
-  }
+  isSelected(id: string): boolean { return this.selectedIds().has(id); }
 
-  onSearchChange(value: string): void {
-    this.searchQuery.set(value);
-  }
+  onSearchChange(value: string): void { this.searchQuery.set(value); }
 
   selectPeriod(period: FilterPeriod): void {
     this.selectedPeriod.set(period);
@@ -61,11 +57,9 @@ export class FilterDrawerComponent implements OnChanges {
   }
 
   toggleAll(): void {
-    if (this.allSelected()) {
-      this.selectedIds.set(new Set());
-    } else {
-      this.selectedIds.set(new Set(this.allUnits.map(u => u.id)));
-    }
+    this.selectedIds.set(
+      this.allSelected() ? new Set() : new Set(this.allUnits.map(u => u.id))
+    );
   }
 
   toggleUnit(id: string): void {
@@ -95,6 +89,7 @@ export class FilterDrawerComponent implements OnChanges {
       this.selectedIds.set(new Set(UNITS_MOCK.map(u => u.id)));
       this.searchQuery.set('');
       this.selectedPeriod.set('todo');
+      this.showDatePicker.set(false);
     }
   }
 }

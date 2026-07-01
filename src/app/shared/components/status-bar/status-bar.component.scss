@@ -1,8 +1,4 @@
 .status-bar {
-  @media (max-width: 480px) {
-    display: none;
-  }
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -56,5 +52,10 @@
     background: currentColor;
     border-radius: 0 1px 1px 0;
     opacity: 0.4;
+  }
+
+  // Al final para que el compiled CSS quede DESPUÉS de display:flex
+  @media (max-width: 480px) {
+    display: none;
   }
 }

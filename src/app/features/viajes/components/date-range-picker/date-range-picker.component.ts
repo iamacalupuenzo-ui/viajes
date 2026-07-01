@@ -26,6 +26,11 @@ export class DateRangePickerComponent {
   toDate = signal<Date | null>(null);
   currentMonth = signal(new Date());
 
+  // Drag-to-dismiss
+  dragOffset = signal(0);
+  private dragStartY = 0;
+  private isDragging = false;
+
   readonly weekDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   monthLabel = computed(() => {
@@ -36,10 +41,38 @@ export class DateRangePickerComponent {
   });
 
   weeks = computed(() => this.buildCalendar(this.currentMonth(), this.fromDate(), this.toDate()));
-
   fromLabel = computed(() => this.formatShort(this.fromDate()));
   toLabel = computed(() => this.formatShort(this.toDate()));
   canApply = computed(() => !!this.fromDate() && !!this.toDate());
+
+  sheetStyle = computed(() => {
+    const offset = this.dragOffset();
+    if (offset <= 0) return '';
+    return `transform: translateY(${offset}px); transition: none;`;
+  });
+
+  onDragStart(event: PointerEvent): void {
+    this.isDragging = true;
+    this.dragStartY = event.clientY;
+    (event.target as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  onDragMove(event: PointerEvent): void {
+    if (!this.isDragging) return;
+    const delta = event.clientY - this.dragStartY;
+    this.dragOffset.set(Math.max(0, delta));
+  }
+
+  onDragEnd(): void {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    if (this.dragOffset() > 120) {
+      this.dragOffset.set(0);
+      this.close.emit();
+    } else {
+      this.dragOffset.set(0);
+    }
+  }
 
   onDayClick(day: CalendarDay): void {
     if (!day.date) return;
@@ -49,11 +82,7 @@ export class DateRangePickerComponent {
       this.fromDate.set(day.date);
       this.toDate.set(null);
     } else {
-      if (day.date < from) {
-        this.fromDate.set(day.date);
-      } else {
-        this.toDate.set(day.date);
-      }
+      day.date < from ? this.fromDate.set(day.date) : this.toDate.set(day.date);
     }
   }
 
@@ -87,18 +116,21 @@ export class DateRangePickerComponent {
     ];
     while (cells.length % 7 !== 0) cells.push(null);
 
-    const toWeeks: CalendarDay[][] = [];
+    const weeks: CalendarDay[][] = [];
     for (let i = 0; i < cells.length; i += 7) {
-      toWeeks.push(cells.slice(i, i + 7).map(d => {
+      weeks.push(cells.slice(i, i + 7).map(d => {
         const date = d ? new Date(year, m, d) : null;
-        const isStart = !!date && !!from && this.sameDay(date, from);
-        const isEnd = !!date && !!to && this.sameDay(date, to);
-        const isInRange = !!date && !!from && !!to && date > from && date < to;
-        const isToday = !!date && this.sameDay(date, today);
-        return { day: d, date, isStart, isEnd, isInRange, isToday };
+        return {
+          day: d,
+          date,
+          isStart: !!date && !!from && this.sameDay(date, from),
+          isEnd: !!date && !!to && this.sameDay(date, to),
+          isInRange: !!date && !!from && !!to && date > from && date < to,
+          isToday: !!date && this.sameDay(date, today),
+        };
       }));
     }
-    return toWeeks;
+    return weeks;
   }
 
   private sameDay(a: Date, b: Date): boolean {

@@ -4,7 +4,7 @@ export const VIAJES_MOCK: Viaje[] = [
   {
     id: '1',
     placa: 'D4G-821',
-    codigoMotor: 'E-2847',
+    codigoMotor: '2847391020',
     rating: 4.1,
     puntoB: {
       label: 'B',
@@ -24,7 +24,7 @@ export const VIAJES_MOCK: Viaje[] = [
   {
     id: '2',
     placa: 'F7K-392',
-    codigoMotor: 'E-1293',
+    codigoMotor: '1293847562',
     rating: 2.8,
     puntoB: {
       label: 'B',
@@ -44,7 +44,7 @@ export const VIAJES_MOCK: Viaje[] = [
   {
     id: '3',
     placa: 'A3M-156',
-    codigoMotor: 'E-5521',
+    codigoMotor: '5521034891',
     rating: 3.7,
     puntoB: {
       label: 'B',
@@ -64,7 +64,7 @@ export const VIAJES_MOCK: Viaje[] = [
   {
     id: '4',
     placa: 'C9B-447',
-    codigoMotor: 'E-0934',
+    codigoMotor: '0934127856',
     rating: 4.6,
     puntoB: {
       label: 'B',

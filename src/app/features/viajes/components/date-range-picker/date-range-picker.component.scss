@@ -28,6 +28,14 @@
     background: var(--color-border-strong);
     border-radius: 2px;
     margin: 12px auto 4px;
+    cursor: grab;
+    touch-action: none;
+    padding: 12px 80px; // área de toque más grande
+    box-sizing: content-box;
+    transform: translateX(-80px);
+    background-clip: content-box;
+
+    &:active { cursor: grabbing; }
   }
 
   &__header {

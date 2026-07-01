@@ -2,13 +2,32 @@
 
   <div class="viajes-list__header">
     <h1 class="viajes-list__title">Mis viajes</h1>
-    <button class="viajes-list__filter" (click)="showFilter.set(true)" type="button">
+    <button class="viajes-list__filter" (click)="filterState.open()" type="button">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
         <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
       Filtrar
     </button>
   </div>
+
+  <!-- Indicador de filtro activo -->
+  @if (filterState.periodLabel()) {
+    <div class="viajes-list__filter-bar">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+        <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>{{ filterState.periodLabel() }}</span>
+      @if (filterState.unitCount()) {
+        <span class="viajes-list__filter-dot">·</span>
+        <span>{{ filterState.unitCount() }} unidades</span>
+      }
+      <button class="viajes-list__filter-clear" (click)="filterState.apply({ period: 'todo', unitIds: [] })" type="button" aria-label="Limpiar filtro">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  }
 
   <div class="viajes-list__counter" [class.viajes-list__counter--active]="hasSelection()">
     <span>{{ selectedCount() }} seleccionados</span>
@@ -38,12 +57,5 @@
       (verRecorrido)="onVerRecorrido()"
     />
   }
-
-  <!-- Filter drawer -->
-  <app-filter-drawer
-    [isOpen]="showFilter()"
-    (close)="showFilter.set(false)"
-    (apply)="onFilterApply($event)"
-  />
 
 </div>
