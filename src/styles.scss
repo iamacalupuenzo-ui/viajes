@@ -1,0 +1,25 @@
+// Entry point de estilos globales
+
+// 1. Tokens (orden importante: primitivos antes que semánticos)
+@use './styles/tokens/primitives' as *;
+@use './styles/tokens/semantic' as *;
+
+// 2. Base
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-default);
+  color: var(--color-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+// 3. Tipografía, bordes y sombras → se agregan cuando
+//    estén definidos en Lyse Design System.

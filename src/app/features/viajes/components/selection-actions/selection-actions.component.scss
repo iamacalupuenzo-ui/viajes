@@ -1,0 +1,40 @@
+.actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--color-border-default);
+  flex-shrink: 0;
+
+  &__btn {
+    flex: 1;
+    height: 50px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.15s ease;
+    font-family: inherit;
+    letter-spacing: -0.1px;
+
+    &:active {
+      transform: scale(0.97);
+      opacity: 0.85;
+    }
+
+    &--outline {
+      background: var(--color-bg-surface);
+      border: none;
+      color: var(--color-text-primary);
+    }
+
+    &--filled {
+      background: var(--color-brand-default);
+      border: none;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(232, 96, 60, 0.35);
+    }
+  }
+}

@@ -1,0 +1,56 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 8px;
+  height: 48px;
+  background: var(--color-bg-default);
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+
+  &__time {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-primary);
+  }
+
+  &__battery {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+  }
+
+  &__battery-body {
+    width: 22px;
+    height: 11px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    padding: 1.5px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__battery-fill {
+    width: 65%;
+    height: 100%;
+    background: currentColor;
+    border-radius: 1.5px;
+  }
+
+  &__battery-tip {
+    width: 2px;
+    height: 5px;
+    background: currentColor;
+    border-radius: 0 1px 1px 0;
+    opacity: 0.4;
+  }
+}

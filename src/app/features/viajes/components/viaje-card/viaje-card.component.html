@@ -1,0 +1,79 @@
+<div class="card" [class.card--selected]="selected()">
+
+  <div class="card__header">
+    <div class="card__header-left">
+      <span class="card__unit">{{ viaje().unidad }}</span>
+      <span class="card__gps">{{ viaje().gpsId }}</span>
+    </div>
+    <div class="card__header-right">
+      <span class="card__rating">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
+          <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
+        </svg>
+        {{ viaje().rating }}
+      </span>
+      <button
+        class="card__checkbox"
+        (click)="onToggle()"
+        [attr.aria-checked]="selected()"
+        [attr.aria-label]="'Seleccionar viaje ' + viaje().unidad"
+        role="checkbox"
+        type="button"
+      >
+        @if (selected()) {
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect width="22" height="22" rx="6" fill="var(--color-brand-default)"/>
+            <path d="M6 11L9.5 14.5L16 7.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        } @else {
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="0.75" y="0.75" width="20.5" height="20.5" rx="5.25" stroke="var(--color-border-strong)" stroke-width="1.5"/>
+          </svg>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Route visualization -->
+  <div class="card__route">
+    <div class="card__route-track">
+      <span class="card__dot card__dot--top"></span>
+      <span class="card__track-line"></span>
+      <span class="card__dot card__dot--bottom"></span>
+    </div>
+    <div class="card__route-points">
+      <div class="card__point">
+        <span class="card__point-label">B</span>
+        <div class="card__point-info">
+          <span class="card__address">{{ viaje().puntoB.direccion }}</span>
+          <span class="card__date">{{ formatDate(viaje().puntoB.fecha) }}</span>
+        </div>
+      </div>
+      <div class="card__point">
+        <span class="card__point-label">A</span>
+        <div class="card__point-info">
+          <span class="card__address">{{ viaje().puntoA.direccion }}</span>
+          <span class="card__date">{{ formatDate(viaje().puntoA.fecha) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card__footer">
+    <div class="card__stat">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6.5" stroke="var(--color-text-tertiary)" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5L10.5 10" stroke="var(--color-text-tertiary)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>{{ viaje().duracion }}</span>
+    </div>
+    <div class="card__stat">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2C5.8 2 4 3.8 4 6C4 9 8 14 8 14C8 14 12 9 12 6C12 3.8 10.2 2 8 2ZM8 7.5C7.17 7.5 6.5 6.83 6.5 6C6.5 5.17 7.17 4.5 8 4.5C8.83 4.5 9.5 5.17 9.5 6C9.5 6.83 8.83 7.5 8 7.5Z" fill="var(--color-text-tertiary)"/>
+      </svg>
+      <span>{{ viaje().distanciaKm }} km</span>
+    </div>
+    <span class="card__price">{{ formatPrice(viaje().precio) }}</span>
+  </div>
+
+</div>

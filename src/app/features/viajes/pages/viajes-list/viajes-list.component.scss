@@ -1,0 +1,104 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  background: var(--color-bg-subtle);
+}
+
+.viajes-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 14px;
+    background: var(--color-bg-default);
+    border-bottom: 1px solid var(--color-border-default);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0;
+    letter-spacing: -0.8px;
+    line-height: 1.1;
+  }
+
+  &__filter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--color-bg-surface);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+
+    &:active {
+      background: var(--color-border-default);
+    }
+  }
+
+  &__counter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 20px;
+    background: var(--color-bg-default);
+    flex-shrink: 0;
+
+    span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-tertiary);
+    }
+
+    &--active span {
+      color: var(--color-brand-default);
+      font-weight: 600;
+    }
+  }
+
+  &__scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 0 16px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__group {
+    padding: 16px 16px 4px;
+  }
+
+  &__group-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

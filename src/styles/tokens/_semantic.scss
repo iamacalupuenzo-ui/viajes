@@ -1,0 +1,82 @@
+// ============================================
+// SEMANTIC COLORS — tokens con intención
+// Estos son los que se usan en componentes.
+// ============================================
+
+:root {
+  // Brand
+  --color-brand-default:   var(--orange-500);
+  --color-brand-hover:     var(--orange-600);
+  --color-brand-active:    var(--orange-700);
+  --color-brand-subtle:    var(--orange-50);
+  --color-brand-emphasis:  var(--orange-800);
+
+  // Texto
+  --color-text-primary:    var(--neutral-900);
+  --color-text-secondary:  var(--neutral-600);
+  --color-text-tertiary:   var(--neutral-400);
+  --color-text-disabled:   var(--neutral-300);
+  --color-text-inverse:    var(--neutral-0);
+  --color-text-brand:      var(--orange-500);
+  --color-text-on-brand:   var(--neutral-0);
+
+  // Fondos
+  --color-bg-default:      var(--neutral-0);
+  --color-bg-subtle:       var(--neutral-50);
+  --color-bg-surface:      var(--neutral-100);
+  --color-bg-elevated:     var(--neutral-0);
+  --color-bg-brand:        var(--orange-500);
+  --color-bg-brand-subtle: var(--orange-50);
+
+  // Bordes
+  --color-border-default:  var(--neutral-200);
+  --color-border-strong:   var(--neutral-300);
+  --color-border-brand:    var(--orange-500);
+  --color-border-focus:    var(--orange-500);
+
+  // Estados funcionales
+  --color-success-bg:      var(--green-50);
+  --color-success-text:    var(--green-700);
+  --color-success-border:  var(--green-500);
+
+  --color-error-bg:        var(--red-50);
+  --color-error-text:      var(--red-700);
+  --color-error-border:    var(--red-500);
+
+  --color-warning-bg:      var(--yellow-50);
+  --color-warning-text:    var(--yellow-700);
+  --color-warning-border:  var(--yellow-500);
+
+  --color-info-bg:         var(--blue-50);
+  --color-info-text:       var(--blue-700);
+  --color-info-border:     var(--blue-500);
+}
+
+// Dark mode
+.dark {
+  --color-brand-default:   var(--orange-400);
+  --color-brand-hover:     var(--orange-300);
+  --color-brand-active:    var(--orange-200);
+  --color-brand-subtle:    var(--orange-950);
+  --color-brand-emphasis:  var(--orange-200);
+
+  --color-text-primary:    var(--neutral-50);
+  --color-text-secondary:  var(--neutral-400);
+  --color-text-tertiary:   var(--neutral-500);
+  --color-text-disabled:   var(--neutral-700);
+  --color-text-inverse:    var(--neutral-900);
+  --color-text-brand:      var(--orange-400);
+  --color-text-on-brand:   var(--neutral-0);
+
+  --color-bg-default:      var(--neutral-950);
+  --color-bg-subtle:       var(--neutral-900);
+  --color-bg-surface:      var(--neutral-800);
+  --color-bg-elevated:     var(--neutral-800);
+  --color-bg-brand:        var(--orange-500);
+  --color-bg-brand-subtle: var(--orange-950);
+
+  --color-border-default:  var(--neutral-800);
+  --color-border-strong:   var(--neutral-700);
+  --color-border-brand:    var(--orange-400);
+  --color-border-focus:    var(--orange-400);
+}

@@ -1,0 +1,42 @@
+<div class="viajes-list">
+
+  <div class="viajes-list__header">
+    <h1 class="viajes-list__title">Mis viajes</h1>
+    <button class="viajes-list__filter" type="button">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Filtrar
+    </button>
+  </div>
+
+  <div class="viajes-list__counter" [class.viajes-list__counter--active]="hasSelection()">
+    <span>{{ selectedCount() }} seleccionados</span>
+  </div>
+
+  <div class="viajes-list__scroll">
+    @for (group of groups; track group.label) {
+      <div class="viajes-list__group">
+        <span class="viajes-list__group-label">{{ group.label }}</span>
+        <div class="viajes-list__cards">
+          @for (viaje of group.viajes; track viaje.id) {
+            <app-viaje-card
+              [viaje]="viaje"
+              [selected]="isSelected(viaje.id)"
+              (toggle)="onToggle($event)"
+            />
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (hasSelection()) {
+    <app-selection-actions
+      [count]="selectedCount()"
+      (limpiar)="onLimpiar()"
+      (verRecorrido)="onVerRecorrido()"
+    />
+  }
+
+</div>
