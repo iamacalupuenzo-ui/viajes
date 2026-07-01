@@ -9,12 +9,14 @@
 >
   <!-- Handle draggable -->
   <div
-    class="sheet__handle"
+    class="sheet__handle-area"
     (pointerdown)="onDragStart($event)"
     (pointermove)="onDragMove($event)"
     (pointerup)="onDragEnd()"
     (pointercancel)="onDragEnd()"
-  ></div>
+  >
+    <div class="sheet__handle"></div>
+  </div>
 
   <div class="sheet__header">
     <span class="sheet__title">Filtrar por</span>

@@ -1,5 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { FilterConfig, FilterPeriod } from '../../features/viajes/models/filter.model';
+import { UNITS_MOCK } from '../../features/viajes/data/units.mock';
+
+const TOTAL_UNITS = UNITS_MOCK.length;
 
 const PERIOD_LABELS: Record<FilterPeriod, string> = {
   todo: 'Todo',
@@ -15,10 +18,19 @@ export class FilterStateService {
 
   readonly periodLabel = computed(() => {
     const cfg = this.activeConfig();
-    return cfg ? PERIOD_LABELS[cfg.period] : null;
+    if (!cfg || cfg.period === 'todo') return null;
+    if (cfg.period === 'personalizado' && cfg.fromDate && cfg.toDate) {
+      return `${this.fmtDate(cfg.fromDate)} - ${this.fmtDate(cfg.toDate)}`;
+    }
+    return PERIOD_LABELS[cfg.period];
   });
 
-  readonly unitCount = computed(() => this.activeConfig()?.unitIds.length ?? null);
+  readonly unitCount = computed(() => {
+    const cfg = this.activeConfig();
+    if (!cfg) return null;
+    const count = cfg.unitIds.length;
+    return (count === 0 || count >= TOTAL_UNITS) ? null : count;
+  });
 
   open(): void { this.isOpen.set(true); }
   close(): void { this.isOpen.set(false); }
@@ -26,5 +38,10 @@ export class FilterStateService {
   apply(config: FilterConfig): void {
     this.activeConfig.set(config);
     this.close();
+  }
+
+  private fmtDate(d: Date): string {
+    const m = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    return `${d.getDate()} ${m[d.getMonth()]}`;
   }
 }

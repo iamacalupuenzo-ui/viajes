@@ -19,7 +19,6 @@
     justify-content: space-between;
     padding: 12px 20px 14px;
     background: var(--color-bg-default);
-    border-bottom: 1px solid var(--color-border-default);
     flex-shrink: 0;
   }
 
@@ -50,56 +49,60 @@
     &:active { background: var(--color-border-default); }
   }
 
-  // ── Indicador filtro activo ───────────────────
-  &__filter-bar {
+  // ── Subheader: pill + counter en misma fila ──
+  &__subheader {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: var(--color-bg-default);
+    flex-shrink: 0;
+    gap: 8px;
+    min-height: 40px;
+  }
+
+  &__filter-pill {
+    display: inline-flex;
+    align-items: center;
     gap: 5px;
-    padding: 7px 16px;
+    padding: 6px 8px 6px 10px;
     background: var(--color-bg-brand-subtle);
-    font-size: 12px;
+    border-radius: 20px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--color-brand-default);
-    flex-shrink: 0;
 
     svg { flex-shrink: 0; }
   }
 
   &__filter-dot {
-    opacity: 0.5;
+    opacity: 0.65;
+    font-weight: 500;
   }
 
   &__filter-clear {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: auto;
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: none;
+    background: color-mix(in srgb, var(--color-brand-default) 18%, transparent);
     border: none;
     cursor: pointer;
     color: var(--color-brand-default);
     padding: 0;
-    opacity: 0.7;
+    margin-left: 2px;
   }
 
   &__counter {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 8px 20px;
-    background: var(--color-bg-default);
-    flex-shrink: 0;
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
 
-    span {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-text-tertiary);
-    }
-
-    &--active span {
+    &--active {
       color: var(--color-brand-default);
       font-weight: 600;
     }
