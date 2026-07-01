@@ -1,7 +1,9 @@
 import {
   Component,
   input,
+  output,
   effect,
+  untracked,
   ViewChild,
   ElementRef,
   AfterViewInit,
@@ -23,20 +25,46 @@ import { RecorridoData, EventoRecorrido, EventoTipo } from '../../models/recorri
 export class MapViewComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapEl') mapEl!: ElementRef<HTMLDivElement>;
 
-  recorrido = input<RecorridoData | undefined>(undefined);
-  eventos   = input<EventoRecorrido[]>([]);
+  recorridos    = input<RecorridoData[]>([]);
+  eventos       = input<EventoRecorrido[]>([]);
+  focusedId     = input<string>('');
+  tripColors    = input<string[]>([]);
+  eventSelected = output<EventoRecorrido | null>();
 
   private map?: L.Map;
   private layers: L.Layer[] = [];
   private readonly zone = inject(NgZone);
 
   constructor() {
+    // Re-render capas cuando cambien los datos
     effect(() => {
-      const r  = this.recorrido();
-      const ev = this.eventos();
+      const recorridos = this.recorridos();
+      const eventos    = this.eventos();
+      const colors     = this.tripColors();
       if (this.map) {
-        this.zone.runOutsideAngular(() => this.renderLayers(r, ev));
+        this.zone.runOutsideAngular(() => this.renderLayers(recorridos, eventos, colors));
       }
+    });
+
+    // Fly to viaje enfocado (usa untracked para no depender de recorridos aquí)
+    effect(() => {
+      const id = this.focusedId();
+      if (!this.map) return;
+
+      this.zone.runOutsideAngular(() => {
+        if (!id) {
+          // Deseleccionado: vuelve a ver todos
+          const all = untracked(() => this.recorridos());
+          const bounds = all.flatMap(r => [r.puntoA.coords, r.puntoB.coords, ...r.ruta]);
+          if (bounds.length) this.map!.flyToBounds(bounds as L.LatLngTuple[], { padding: [48, 32], duration: 0.7 });
+        } else {
+          const all = untracked(() => this.recorridos());
+          const r   = all.find(rec => rec.viajeId === id);
+          if (!r) return;
+          const bounds: [number, number][] = [r.puntoA.coords, ...r.ruta, r.puntoB.coords];
+          this.map!.flyToBounds(bounds as L.LatLngTuple[], { padding: [48, 32], maxZoom: 15, duration: 0.7 });
+        }
+      });
     });
   }
 
@@ -55,7 +83,12 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
           L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-          this.renderLayers(this.recorrido(), this.eventos());
+          // Click en fondo del mapa → cierra el card
+          this.map.on('click', () => {
+            this.zone.run(() => this.eventSelected.emit(null));
+          });
+
+          this.renderLayers(this.recorridos(), this.eventos(), this.tripColors());
         });
       });
     });
@@ -65,52 +98,56 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     this.map?.remove();
   }
 
-  private renderLayers(recorrido: RecorridoData | undefined, eventos: EventoRecorrido[]): void {
+  private renderLayers(
+    recorridos: RecorridoData[],
+    eventos: EventoRecorrido[],
+    colors: string[],
+  ): void {
     this.layers.forEach(l => l.remove());
     this.layers = [];
 
-    if (!recorrido || !this.map) return;
+    if (!this.map || recorridos.length === 0) return;
 
-    const { puntoA, puntoB, ruta } = recorrido;
-    const routePoints: [number, number][] = [puntoA.coords, ...ruta, puntoB.coords];
+    const allBounds: [number, number][] = [];
 
-    const polyline = L.polyline(routePoints, {
-      color: '#292622',
-      weight: 3,
-      opacity: 0.9,
-    }).addTo(this.map);
-    this.layers.push(polyline);
+    recorridos.forEach((recorrido, i) => {
+      const color = colors[i] ?? '#292622';
+      const { puntoA, puntoB, ruta } = recorrido;
+      const routePoints: [number, number][] = [puntoA.coords, ...ruta, puntoB.coords];
 
-    const markerA = L.marker(puntoA.coords, { icon: this.pointIcon('A') })
-      .bindPopup(`<b>Punto A — Inicio</b><br>${puntoA.direccion}`)
-      .addTo(this.map);
+      const polyline = L.polyline(routePoints, { color, weight: 3.5, opacity: 0.9 }).addTo(this.map!);
+      this.layers.push(polyline);
 
-    const markerB = L.marker(puntoB.coords, { icon: this.pointIcon('B') })
-      .bindPopup(`<b>Punto B — Destino</b><br>${puntoB.direccion}`)
-      .addTo(this.map);
+      const markerA = L.marker(puntoA.coords, { icon: this.pointIcon('A', color) })
+        .bindPopup(`<b>Inicio — Viaje ${i + 1}</b><br>${puntoA.direccion}`, { offset: [0, 20] })
+        .addTo(this.map!);
+      const markerB = L.marker(puntoB.coords, { icon: this.pointIcon('B', color) })
+        .bindPopup(`<b>Destino — Viaje ${i + 1}</b><br>${puntoB.direccion}`, { offset: [0, 20] })
+        .addTo(this.map!);
 
-    this.layers.push(markerA, markerB);
+      this.layers.push(markerA, markerB);
+      allBounds.push(puntoA.coords, puntoB.coords, ...ruta);
+    });
 
     for (const ev of eventos) {
-      const m = L.marker(ev.coords, { icon: this.eventoIcon(ev.tipo) })
-        .bindPopup(`<b>${EVENTO_LABELS[ev.tipo]}</b><br>${ev.descripcion}`)
-        .addTo(this.map);
+      const m = L.marker(ev.coords, { icon: this.eventoIcon(ev.tipo) }).addTo(this.map!);
+      m.on('click', (e: L.LeafletMouseEvent) => {
+        L.DomEvent.stopPropagation(e);
+        this.zone.run(() => this.eventSelected.emit(ev));
+      });
       this.layers.push(m);
+      allBounds.push(ev.coords);
     }
 
-    const allPoints: [number, number][] = [
-      puntoA.coords,
-      puntoB.coords,
-      ...ruta,
-      ...eventos.map(e => e.coords),
-    ];
-    this.map.fitBounds(allPoints as L.LatLngTuple[], { padding: [48, 32] });
+    if (allBounds.length) {
+      this.map.fitBounds(allBounds as L.LatLngTuple[], { padding: [48, 32] });
+    }
   }
 
-  private pointIcon(label: 'A' | 'B'): L.DivIcon {
+  private pointIcon(label: 'A' | 'B', color: string): L.DivIcon {
     return L.divIcon({
       className: '',
-      html: `<div class="map-point map-point--${label.toLowerCase()}">${label}</div>`,
+      html: `<div class="map-point" style="background:${color}">${label}</div>`,
       iconSize: [32, 32],
       iconAnchor: [16, 16],
     });

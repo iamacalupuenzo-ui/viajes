@@ -7,5 +7,10 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/viajes/viajes.routes').then(m => m.VIAJES_ROUTES),
   },
+  {
+    path: 'indicadores',
+    loadChildren: () =>
+      import('./features/indicadores/indicadores.routes').then(m => m.INDICADORES_ROUTES),
+  },
   { path: '**', redirectTo: 'viajes' },
 ];

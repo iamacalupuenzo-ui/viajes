@@ -19,11 +19,15 @@ export class MobileShellComponent {
   readonly filterState = inject(FilterStateService);
   private readonly router = inject(Router);
 
+  private isMapRoute(url: string): boolean {
+    return url.includes('/recorrido') || url.includes('/indicadores');
+  }
+
   readonly isFullscreen = toSignal(
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map((e: NavigationEnd) => e.urlAfterRedirects.includes('/recorrido')),
-      startWith(this.router.url.includes('/recorrido')),
+      map((e: NavigationEnd) => this.isMapRoute(e.urlAfterRedirects)),
+      startWith(this.isMapRoute(this.router.url)),
     ),
     { initialValue: false },
   );

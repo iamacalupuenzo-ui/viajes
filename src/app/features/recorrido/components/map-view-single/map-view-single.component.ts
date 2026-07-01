@@ -1,0 +1,137 @@
+/**
+ * MAP-VIEW SINGLE — Type B (A/B Test)
+ *
+ * Variante de un solo recorrido a la vez.
+ * Usar en: features/indicadores (A/B test vs recorrido multi-trip).
+ *
+ * Diferencias vs MapViewComponent (Type A):
+ *  - Input: recorrido (singular) en lugar de recorridos[]
+ *  - No acepta focusedId ni tripColors
+ *  - Marcadores A: negro, B: naranja (#E8603C)
+ *  - fitBounds del único recorrido al cambiar
+ */
+import {
+  Component,
+  input,
+  effect,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  NgZone,
+  inject,
+  ViewEncapsulation,
+} from '@angular/core';
+import * as L from 'leaflet';
+import { RecorridoData, EventoRecorrido, EventoTipo } from '../../models/recorrido.model';
+
+@Component({
+  selector: 'app-map-view-single',
+  standalone: true,
+  templateUrl: './map-view-single.component.html',
+  styleUrl: './map-view-single.component.scss',
+  encapsulation: ViewEncapsulation.None,
+})
+export class MapViewSingleComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('mapEl') mapEl!: ElementRef<HTMLDivElement>;
+
+  recorrido = input<RecorridoData | undefined>(undefined);
+  eventos   = input<EventoRecorrido[]>([]);
+
+  private map?: L.Map;
+  private layers: L.Layer[] = [];
+  private readonly zone = inject(NgZone);
+
+  constructor() {
+    effect(() => {
+      const r  = this.recorrido();
+      const ev = this.eventos();
+      if (this.map) {
+        this.zone.runOutsideAngular(() => this.renderLayers(r, ev));
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.zone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.map = L.map(this.mapEl.nativeElement, {
+            zoomControl: false,
+            attributionControl: false,
+          });
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(this.map);
+          L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+          this.renderLayers(this.recorrido(), this.eventos());
+        });
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.map?.remove();
+  }
+
+  private renderLayers(recorrido: RecorridoData | undefined, eventos: EventoRecorrido[]): void {
+    this.layers.forEach(l => l.remove());
+    this.layers = [];
+
+    if (!recorrido || !this.map) return;
+
+    const { puntoA, puntoB, ruta } = recorrido;
+    const routePoints: [number, number][] = [puntoA.coords, ...ruta, puntoB.coords];
+
+    const polyline = L.polyline(routePoints, { color: '#292622', weight: 3, opacity: 0.9 }).addTo(this.map);
+    this.layers.push(polyline);
+
+    const markerA = L.marker(puntoA.coords, { icon: this.pointIcon('A') })
+      .bindPopup(`<b>Punto A — Inicio</b><br>${puntoA.direccion}`, { offset: [0, 20] })
+      .addTo(this.map);
+    const markerB = L.marker(puntoB.coords, { icon: this.pointIcon('B') })
+      .bindPopup(`<b>Punto B — Destino</b><br>${puntoB.direccion}`, { offset: [0, 20] })
+      .addTo(this.map);
+
+    this.layers.push(markerA, markerB);
+
+    for (const ev of eventos) {
+      const m = L.marker(ev.coords, { icon: this.eventoIcon(ev.tipo) })
+        .bindPopup(`<b>${EVENTO_LABELS[ev.tipo]}</b><br>${ev.descripcion}`, { offset: [0, 18] })
+        .addTo(this.map);
+      this.layers.push(m);
+    }
+
+    const allPoints: [number, number][] = [
+      puntoA.coords,
+      puntoB.coords,
+      ...ruta,
+      ...eventos.map(e => e.coords),
+    ];
+    this.map.fitBounds(allPoints as L.LatLngTuple[], { padding: [48, 32] });
+  }
+
+  private pointIcon(label: 'A' | 'B'): L.DivIcon {
+    return L.divIcon({
+      className: '',
+      html: `<div class="map-point map-point--${label.toLowerCase()}">${label}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+  }
+
+  private eventoIcon(tipo: EventoTipo): L.DivIcon {
+    const glyphs: Record<EventoTipo, string> = {
+      alerta: '!', reinicio: '↺', exceso_velocidad: '⚡', parada: 'P',
+    };
+    return L.divIcon({
+      className: '',
+      html: `<div class="map-evento map-evento--${tipo}">${glyphs[tipo]}</div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+  }
+}
+
+const EVENTO_LABELS: Record<EventoTipo, string> = {
+  alerta: 'Alerta', reinicio: 'Reinicio de motor',
+  exceso_velocidad: 'Exceso de velocidad', parada: 'Parada',
+};

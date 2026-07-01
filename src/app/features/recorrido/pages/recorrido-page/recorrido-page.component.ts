@@ -18,11 +18,26 @@ interface SheetItem {
   label: string;
 }
 
+interface TripColor {
+  route:  string;
+  chipBg: string;
+  chipBorder: string;
+  chipText: string;
+}
+
 const SHEET_ITEMS: SheetItem[] = [
   { tipo: 'alerta',           label: 'Alerta / Frenada brusca' },
   { tipo: 'exceso_velocidad', label: 'Exceso de velocidad'     },
   { tipo: 'reinicio',         label: 'Ignition On / Off'       },
   { tipo: 'parada',           label: 'Parada prolongada'       },
+];
+
+const TRIP_COLORS: TripColor[] = [
+  { route: '#3B82F6', chipBg: '#EFF6FF', chipBorder: '#BFDBFE', chipText: '#1D4ED8' },
+  { route: '#10B981', chipBg: '#ECFDF5', chipBorder: '#A7F3D0', chipText: '#065F46' },
+  { route: '#8B5CF6', chipBg: '#F5F3FF', chipBorder: '#DDD6FE', chipText: '#5B21B6' },
+  { route: '#F97316', chipBg: '#FFF7ED', chipBorder: '#FED7AA', chipText: '#C2410C' },
+  { route: '#EC4899', chipBg: '#FDF2F8', chipBorder: '#FBCFE8', chipText: '#9D174D' },
 ];
 
 @Component({
@@ -40,35 +55,50 @@ export class RecorridoPageComponent implements OnInit {
   readonly sheetItems = SHEET_ITEMS;
 
   viajeIds      = signal<string[]>([]);
-  activeId      = signal<string>('');
+  activeId      = signal<string>('');   // viaje enfocado en el mapa (vacío = ver todos)
   activeTab     = signal<ActiveTab>('mapa');
   sheetOpen     = signal(false);
   selectedTypes = signal<Set<EventoTipo>>(new Set());
+
+  selectedEvent = signal<EventoRecorrido | null>(null);
 
   // Drag-to-close
   dragY       = signal(0);
   isDragging  = signal(false);
   private dragStartY = 0;
 
-  readonly activeRecorrido = computed<RecorridoData | undefined>(() =>
-    RECORRIDO_MOCK.find(r => r.viajeId === this.activeId())
+  // Todos los recorridos activos
+  readonly allRecorridos = computed<RecorridoData[]>(() =>
+    this.viajeIds()
+      .map(id => RECORRIDO_MOCK.find(r => r.viajeId === id))
+      .filter((r): r is RecorridoData => !!r)
   );
 
+  // Colores de ruta para el mapa (en el mismo orden que allRecorridos)
+  readonly tripRouteColors = computed<string[]>(() =>
+    this.allRecorridos().map((_, i) => TRIP_COLORS[i % TRIP_COLORS.length].route)
+  );
+
+  // Info del viaje enfocado (para la sección de datos)
+  readonly focusedRecorrido = computed<RecorridoData | undefined>(() =>
+    this.allRecorridos().find(r => r.viajeId === this.activeId())
+  );
+
+  // Conteo de eventos sumando todos los viajes
   readonly eventCounts = computed<Partial<Record<EventoTipo, number>>>(() => {
-    const r = this.activeRecorrido();
-    if (!r) return {};
-    return r.eventos.reduce((acc, e) => {
+    const allEvents = this.allRecorridos().flatMap(r => r.eventos);
+    return allEvents.reduce((acc, e) => {
       acc[e.tipo] = (acc[e.tipo] ?? 0) + 1;
       return acc;
     }, {} as Partial<Record<EventoTipo, number>>);
   });
 
+  // Eventos de todos los viajes filtrados por tipo
   readonly filteredEventos = computed<EventoRecorrido[]>(() => {
-    const recorrido = this.activeRecorrido();
-    if (!recorrido) return [];
     const types = this.selectedTypes();
-    if (types.size === 0) return recorrido.eventos;
-    return recorrido.eventos.filter(e => types.has(e.tipo));
+    const allEvents = this.allRecorridos().flatMap(r => r.eventos);
+    if (types.size === 0) return allEvents;
+    return allEvents.filter(e => types.has(e.tipo));
   });
 
   readonly activeFilterCount = computed(() => this.selectedTypes().size);
@@ -77,11 +107,16 @@ export class RecorridoPageComponent implements OnInit {
     const raw = this.route.snapshot.queryParamMap.get('ids') ?? '';
     const ids = raw.split(',').filter(id => id.trim().length > 0);
     this.viajeIds.set(ids);
-    this.activeId.set(ids[0] ?? '');
+    // No pre-seleccionamos ninguno: el mapa arranca mostrando todos
+  }
+
+  tripColor(index: number): TripColor {
+    return TRIP_COLORS[index % TRIP_COLORS.length];
   }
 
   selectViaje(id: string): void {
-    this.activeId.set(id);
+    // Si ya está seleccionado, deselecciona (vuelve a ver todos)
+    this.activeId.set(this.activeId() === id ? '' : id);
   }
 
   toggleType(tipo: EventoTipo): void {
@@ -132,5 +167,15 @@ export class RecorridoPageComponent implements OnInit {
 
   tripLabel(index: number): string {
     return `Viaje ${index + 1}`;
+  }
+
+  eventoLabel(tipo: EventoTipo): string {
+    const labels: Record<EventoTipo, string> = {
+      alerta:           'Alerta / Frenada brusca',
+      exceso_velocidad: 'Exceso de velocidad',
+      reinicio:         'Ignition On / Off',
+      parada:           'Parada prolongada',
+    };
+    return labels[tipo];
   }
 }
