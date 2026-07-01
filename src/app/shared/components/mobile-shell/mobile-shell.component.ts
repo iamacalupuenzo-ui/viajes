@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, startWith } from 'rxjs';
 import { StatusBarComponent } from '../status-bar/status-bar.component';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav.component';
 import { FilterDrawerComponent } from '../../../features/viajes/components/filter-drawer/filter-drawer.component';
@@ -15,4 +17,14 @@ import { FilterStateService } from '../../../core/services/filter-state.service'
 })
 export class MobileShellComponent {
   readonly filterState = inject(FilterStateService);
+  private readonly router = inject(Router);
+
+  readonly isFullscreen = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map((e: NavigationEnd) => e.urlAfterRedirects.includes('/recorrido')),
+      startWith(this.router.url.includes('/recorrido')),
+    ),
+    { initialValue: false },
+  );
 }

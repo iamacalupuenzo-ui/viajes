@@ -28,26 +28,59 @@
       </div>
     }
     <span class="viajes-list__counter" [class.viajes-list__counter--active]="hasSelection()">
-      {{ selectedCount() }} seleccionados
+      @if (hasSelection()) {
+        {{ selectedCount() }}/{{ MAX_SELECTION }} seleccionados
+      } @else {
+        0 seleccionados
+      }
     </span>
   </div>
 
-  <div class="viajes-list__scroll">
-    @for (group of groups; track group.label) {
-      <div class="viajes-list__group">
-        <span class="viajes-list__group-label">{{ group.label }}</span>
-        <div class="viajes-list__cards">
-          @for (viaje of group.viajes; track viaje.id) {
-            <app-viaje-card
-              [viaje]="viaje"
-              [selected]="isSelected(viaje.id)"
-              (toggle)="onToggle($event)"
-            />
-          }
-        </div>
+  @if (isEmpty()) {
+    <div class="viajes-list__empty">
+      <div class="viajes-list__empty-icon">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Road dashed -->
+          <line x1="6" y1="54" x2="66" y2="54" stroke="currentColor" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>
+          <!-- Truck body -->
+          <rect x="4" y="28" width="40" height="22" rx="4" stroke="currentColor" stroke-width="2"/>
+          <!-- Cab -->
+          <path d="M44 42V34a2 2 0 0 1 2-2h7l10 12v8H44V42Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <!-- Cab window -->
+          <rect x="47" y="37" width="7" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          <!-- Wheel left -->
+          <circle cx="18" cy="54" r="6" fill="var(--color-bg-subtle)" stroke="currentColor" stroke-width="2"/>
+          <!-- Wheel right -->
+          <circle cx="54" cy="54" r="6" fill="var(--color-bg-subtle)" stroke="currentColor" stroke-width="2"/>
+          <!-- Badge X -->
+          <circle cx="58" cy="18" r="10" fill="var(--color-bg-brand-subtle)"/>
+          <path d="M54 14l8 8M62 14l-8 8" stroke="var(--color-brand-default)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
       </div>
-    }
-  </div>
+      <p class="viajes-list__empty-title">Sin viajes encontrados</p>
+      @if (emptyContext()) {
+        <p class="viajes-list__empty-sub">{{ emptyContext() }}</p>
+      }
+    </div>
+  } @else {
+    <div class="viajes-list__scroll">
+      @for (group of groups(); track group.label) {
+        <div class="viajes-list__group">
+          <span class="viajes-list__group-label">{{ group.label }}</span>
+          <div class="viajes-list__cards">
+            @for (viaje of group.viajes; track viaje.id) {
+              <app-viaje-card
+                [viaje]="viaje"
+                [selected]="isSelected(viaje.id)"
+                [disabled]="isCardDisabled(viaje.id)"
+                (toggle)="onToggle($event)"
+              />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
 
   @if (hasSelection()) {
     <app-selection-actions

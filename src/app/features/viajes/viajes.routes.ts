@@ -6,4 +6,9 @@ export const VIAJES_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/viajes-list/viajes-list.component').then(m => m.ViajesListComponent),
   },
+  {
+    path: 'recorrido',
+    loadChildren: () =>
+      import('../recorrido/recorrido.routes').then(m => m.RECORRIDO_ROUTES),
+  },
 ];

@@ -83,6 +83,11 @@
     width: 22px;
     height: 22px;
     flex-shrink: 0;
+
+    &--disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
   }
 
   // ── Route visualization ──────────────────────

@@ -1,0 +1,256 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.recorrido {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg-default);
+  position: relative;
+
+  // ── Header ────────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 16px;
+    height: 52px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border-default);
+    background: var(--color-bg-default);
+    position: relative;
+    z-index: 10;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    margin-left: -6px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+
+    &:hover {
+      background: var(--color-bg-surface);
+    }
+  }
+
+  &__title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    margin: 0;
+    color: var(--color-text-primary);
+  }
+
+  // ── Tabs ─────────────────────────────────────────────────────────────────
+  &__tabs {
+    display: flex;
+    border-bottom: 1px solid var(--color-border-default);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+    background: var(--color-bg-default);
+  }
+
+  &__tab {
+    flex: 1;
+    height: 42px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    font-family: inherit;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: var(--color-brand-default);
+      border-radius: 2px 2px 0 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    &--active {
+      color: var(--color-text-primary);
+      font-weight: 600;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  // ── Unit info ─────────────────────────────────────────────────────────────
+  &__unit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 44px;
+    border-bottom: 1px solid var(--color-border-default);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+    background: var(--color-bg-default);
+  }
+
+  &__unit-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  &__unit-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-text-primary);
+    color: var(--color-text-inverse);
+    padding: 4px 10px;
+    border-radius: 20px;
+    gap: 4px;
+  }
+
+  // ── Trip chips ────────────────────────────────────────────────────────────
+  &__trips {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border-default);
+    position: relative;
+    z-index: 10;
+    background: var(--color-bg-default);
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__trip-chip {
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--color-border-strong);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all 0.15s;
+    flex-shrink: 0;
+
+    &--active {
+      background: var(--color-text-primary);
+      border-color: var(--color-text-primary);
+      color: var(--color-text-inverse);
+      font-weight: 600;
+    }
+  }
+
+  // ── Filter bar ────────────────────────────────────────────────────────────
+  &__filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--color-border-default);
+    flex-shrink: 0;
+    background: var(--color-bg-subtle);
+    position: relative;
+    z-index: 10;
+  }
+
+  &__filter-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__filter-chips {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__filter-chip {
+    height: 26px;
+    padding: 0 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--color-border-default);
+    background: var(--color-bg-default);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all 0.15s;
+    flex-shrink: 0;
+
+    &--active {
+      background: var(--color-text-primary);
+      border-color: var(--color-text-primary);
+      color: var(--color-text-inverse);
+      font-weight: 600;
+    }
+  }
+
+  // ── Historial placeholder ─────────────────────────────────────────────────
+  &__historial {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  &__historial-icon {
+    color: var(--color-text-tertiary);
+  }
+
+  &__historial-text {
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+}

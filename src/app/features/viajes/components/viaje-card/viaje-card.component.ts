@@ -10,11 +10,13 @@ import { Viaje } from '../../models/viaje.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViajeCardComponent {
-  viaje = input.required<Viaje>();
+  viaje    = input.required<Viaje>();
   selected = input<boolean>(false);
-  toggle = output<string>();
+  disabled = input<boolean>(false);
+  toggle   = output<string>();
 
   onToggle(): void {
+    if (this.disabled() && !this.selected()) return;
     this.toggle.emit(this.viaje().id);
   }
 

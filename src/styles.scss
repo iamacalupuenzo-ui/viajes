@@ -21,5 +21,21 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-// 3. Tipografía, bordes y sombras → se agregan cuando
-//    estén definidos en Lyse Design System.
+// 3. Leaflet overrides
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+  padding: 0 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+.leaflet-popup-content {
+  margin: 10px 14px !important;
+  font-size: 13px !important;
+}
+
+.leaflet-popup-tip-container { display: none !important; }
+
+.leaflet-container {
+  font-family: 'Inter', system-ui, sans-serif !important;
+}

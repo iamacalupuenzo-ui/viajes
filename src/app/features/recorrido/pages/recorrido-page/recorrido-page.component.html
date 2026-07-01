@@ -1,0 +1,103 @@
+<div class="recorrido">
+
+  <!-- Header -->
+  <header class="recorrido__header">
+    <button class="recorrido__back" (click)="goBack()" type="button" aria-label="Volver">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <h1 class="recorrido__title">Recorrido</h1>
+  </header>
+
+  <!-- Tabs -->
+  <div class="recorrido__tabs" role="tablist">
+    <button
+      class="recorrido__tab"
+      [class.recorrido__tab--active]="activeTab() === 'mapa'"
+      (click)="activeTab.set('mapa')"
+      role="tab"
+      type="button"
+    >Mapa</button>
+    <button
+      class="recorrido__tab"
+      [class.recorrido__tab--active]="activeTab() === 'historial'"
+      (click)="activeTab.set('historial')"
+      role="tab"
+      type="button"
+    >Historial</button>
+  </div>
+
+  <!-- Unit info -->
+  <div class="recorrido__unit">
+    <span class="recorrido__unit-name">{{ unitLabel() }}</span>
+    @if (activeRecorrido(); as r) {
+      <span class="recorrido__unit-rating">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
+          <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
+        </svg>
+        {{ r.rating }}
+      </span>
+    }
+  </div>
+
+  <!-- Trip selector -->
+  @if (viajeIds().length > 1) {
+    <div class="recorrido__trips">
+      @for (id of viajeIds(); track id; let i = $index) {
+        <button
+          class="recorrido__trip-chip"
+          [class.recorrido__trip-chip--active]="activeId() === id"
+          (click)="selectViaje(id)"
+          type="button"
+        >
+          {{ tripLabel(i) }}
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Event filter -->
+  <div class="recorrido__filter-bar">
+    <span class="recorrido__filter-label">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Filtrar Eventos
+    </span>
+    <div class="recorrido__filter-chips">
+      @for (chip of filterChips; track chip.value) {
+        <button
+          class="recorrido__filter-chip"
+          [class.recorrido__filter-chip--active]="activeFilter() === chip.value"
+          (click)="selectFilter(chip.value)"
+          type="button"
+        >
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Map view -->
+  @if (activeTab() === 'mapa') {
+    <app-map-view
+      [recorrido]="activeRecorrido()"
+      [eventos]="filteredEventos()"
+    />
+  }
+
+  <!-- Historial placeholder -->
+  @if (activeTab() === 'historial') {
+    <div class="recorrido__historial">
+      <div class="recorrido__historial-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="var(--color-border-strong)" stroke-width="1.5"/>
+          <path d="M24 14V24L30 28" stroke="var(--color-text-tertiary)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="recorrido__historial-text">Historial próximamente</p>
+    </div>
+  }
+
+</div>

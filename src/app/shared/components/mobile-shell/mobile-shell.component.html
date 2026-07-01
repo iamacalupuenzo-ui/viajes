@@ -1,16 +1,17 @@
 <div class="shell">
-  <div class="shell__phone">
+  <div class="shell__phone" [class.shell__phone--fullscreen]="isFullscreen()">
     <app-status-bar />
     <div class="shell__content">
       <router-outlet />
     </div>
-    <app-bottom-nav />
 
-    <!-- Drawer al nivel del phone — cubre status bar + bottom nav -->
-    <app-filter-drawer
-      [isOpen]="filterState.isOpen()"
-      (close)="filterState.close()"
-      (apply)="filterState.apply($event)"
-    />
+    @if (!isFullscreen()) {
+      <app-bottom-nav />
+      <app-filter-drawer
+        [isOpen]="filterState.isOpen()"
+        (close)="filterState.close()"
+        (apply)="filterState.apply($event)"
+      />
+    }
   </div>
 </div>
