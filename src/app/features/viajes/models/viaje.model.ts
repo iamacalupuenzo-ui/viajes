@@ -6,8 +6,8 @@ export interface ViajePoint {
 
 export interface Viaje {
   id: string;
-  unidad: string;
-  gpsId: string;
+  placa: string;
+  codigoMotor: string;
   rating: number;
   puntoB: ViajePoint;
   puntoA: ViajePoint;

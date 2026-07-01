@@ -1,0 +1,90 @@
+<!-- Scrim -->
+@if (isOpen()) {
+  <div class="scrim" (click)="close.emit()"></div>
+}
+
+<!-- Bottom sheet -->
+<div class="sheet" [class.sheet--open]="isOpen()">
+
+  <div class="sheet__handle"></div>
+
+  <div class="sheet__header">
+    <span class="sheet__title">Filtrar por</span>
+    <button class="sheet__close" (click)="close.emit()" type="button" aria-label="Cerrar">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M2 2L16 16M16 2L2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Date range labels -->
+  <div class="sheet__range">
+    <div class="sheet__range-col">
+      <span class="sheet__range-label">Desde</span>
+      <span class="sheet__range-value">{{ fromLabel() }}</span>
+    </div>
+    <div class="sheet__range-divider"></div>
+    <div class="sheet__range-col sheet__range-col--end">
+      <span class="sheet__range-label">Hasta</span>
+      <span class="sheet__range-value">{{ toLabel() }}</span>
+    </div>
+  </div>
+
+  <!-- Month navigation -->
+  <div class="sheet__month-nav">
+    <button class="sheet__nav-btn" (click)="prevMonth()" type="button" aria-label="Mes anterior">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <span class="sheet__month-label">{{ monthLabel() }}</span>
+    <button class="sheet__nav-btn" (click)="nextMonth()" type="button" aria-label="Mes siguiente">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M7 4L12 9L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Week days -->
+  <div class="sheet__weekdays">
+    @for (d of weekDays; track d) {
+      <span class="sheet__weekday">{{ d }}</span>
+    }
+  </div>
+
+  <!-- Calendar grid -->
+  <div class="sheet__calendar">
+    @for (week of weeks(); track $index) {
+      <div class="sheet__week">
+        @for (day of week; track $index) {
+          <button
+            class="sheet__day"
+            [class.sheet__day--empty]="!day.day"
+            [class.sheet__day--start]="day.isStart"
+            [class.sheet__day--end]="day.isEnd"
+            [class.sheet__day--in-range]="day.isInRange"
+            [class.sheet__day--today]="day.isToday && !day.isStart && !day.isEnd"
+            (click)="onDayClick(day)"
+            [disabled]="!day.day"
+            type="button"
+          >
+            {{ day.day }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Apply -->
+  <div class="sheet__footer">
+    <button
+      class="sheet__apply"
+      [disabled]="!canApply()"
+      (click)="onApply()"
+      type="button"
+    >
+      Aplicar filtros
+    </button>
+  </div>
+
+</div>

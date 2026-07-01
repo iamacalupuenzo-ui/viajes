@@ -2,8 +2,8 @@
 
   <div class="card__header">
     <div class="card__header-left">
-      <span class="card__unit">{{ viaje().unidad }}</span>
-      <span class="card__gps">{{ viaje().gpsId }}</span>
+      <span class="card__unit">{{ viaje().placa }}</span>
+      <span class="card__gps">{{ viaje().codigoMotor }}</span>
     </div>
     <div class="card__header-right">
       <span class="card__rating">
@@ -16,7 +16,7 @@
         class="card__checkbox"
         (click)="onToggle()"
         [attr.aria-checked]="selected()"
-        [attr.aria-label]="'Seleccionar viaje ' + viaje().unidad"
+        [attr.aria-label]="'Seleccionar viaje ' + viaje().placa"
         role="checkbox"
         type="button"
       >

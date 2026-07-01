@@ -1,4 +1,8 @@
 .status-bar {
+  @media (max-width: 480px) {
+    display: none;
+  }
+
   display: flex;
   align-items: center;
   justify-content: space-between;

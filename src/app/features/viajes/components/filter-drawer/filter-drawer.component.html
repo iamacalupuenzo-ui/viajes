@@ -1,0 +1,108 @@
+<div class="drawer" [class.drawer--open]="isOpen()">
+
+  <!-- Header -->
+  <div class="drawer__header">
+    <button class="drawer__back" (click)="close.emit()" type="button" aria-label="Volver">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <span class="drawer__title">Filtrar por</span>
+  </div>
+
+  <div class="drawer__body">
+
+    <!-- Search -->
+    <div class="drawer__search-wrap">
+      <svg class="drawer__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        class="drawer__search"
+        type="text"
+        placeholder="Buscar unidad..."
+        [value]="searchQuery()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+
+    <!-- Period -->
+    <span class="drawer__section-label">Período</span>
+    <div class="drawer__chips">
+      @for (p of periods; track p.key) {
+        <button
+          class="drawer__chip"
+          [class.drawer__chip--active]="selectedPeriod() === p.key"
+          [class.drawer__chip--icon-only]="p.icon"
+          (click)="selectPeriod(p.key)"
+          [attr.aria-label]="p.label"
+          type="button"
+        >
+          @if (p.icon) {
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M9 11.5H14M11.5 9V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          } @else {
+            {{ p.label }}
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Units list -->
+    <div class="drawer__list">
+
+      <div class="drawer__list-item drawer__list-item--all" (click)="toggleAll()">
+        <span class="drawer__item-name">Todas las unidades</span>
+        <span class="drawer__checkbox" [class.drawer__checkbox--checked]="allSelected()">
+          @if (allSelected()) {
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 7L6 10.5L11.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          }
+        </span>
+      </div>
+
+      <div class="drawer__divider"></div>
+
+      @for (unit of filteredUnits(); track unit.id) {
+        <div class="drawer__list-item" (click)="toggleUnit(unit.id)">
+          <div class="drawer__item-info">
+            <span class="drawer__item-gps">{{ unit.placa }} · {{ unit.codigoMotor }}</span>
+            <span class="drawer__item-name">{{ unit.modelo }}</span>
+          </div>
+          <span class="drawer__checkbox" [class.drawer__checkbox--checked]="isSelected(unit.id)">
+            @if (isSelected(unit.id)) {
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2.5 7L6 10.5L11.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+          </span>
+        </div>
+        <div class="drawer__divider"></div>
+      }
+
+    </div>
+  </div>
+
+  <!-- Apply button — solo visible cuando hay selección -->
+  @if (canApply()) {
+    <div class="drawer__footer">
+      <button class="drawer__apply" (click)="onApply()" type="button">
+        Aplicar ({{ selectedCount() }} seleccionadas)
+      </button>
+    </div>
+  }
+
+  <!-- Date range picker -->
+  <app-date-range-picker
+    [isOpen]="showDatePicker()"
+    (close)="showDatePicker.set(false)"
+    (apply)="onDateApply($event)"
+  />
+
+</div>

@@ -2,7 +2,7 @@
 
   <div class="viajes-list__header">
     <h1 class="viajes-list__title">Mis viajes</h1>
-    <button class="viajes-list__filter" type="button">
+    <button class="viajes-list__filter" (click)="showFilter.set(true)" type="button">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
         <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
@@ -38,5 +38,12 @@
       (verRecorrido)="onVerRecorrido()"
     />
   }
+
+  <!-- Filter drawer -->
+  <app-filter-drawer
+    [isOpen]="showFilter()"
+    (close)="showFilter.set(false)"
+    (apply)="onFilterApply($event)"
+  />
 
 </div>

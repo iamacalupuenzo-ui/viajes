@@ -1,0 +1,222 @@
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 30;
+  animation: fadeIn 0.25s ease;
+}
+
+.sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-bg-default);
+  border-radius: 24px 24px 0 0;
+  z-index: 31;
+  padding-bottom: 24px;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+
+  &--open {
+    transform: translateY(0);
+  }
+
+  &__handle {
+    width: 36px;
+    height: 4px;
+    background: var(--color-border-strong);
+    border-radius: 2px;
+    margin: 12px auto 4px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+  }
+
+  &__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-bg-surface);
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+  }
+
+  &__range {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    margin-bottom: 4px;
+  }
+
+  &__range-col {
+    flex: 1;
+
+    &--end {
+      text-align: right;
+    }
+  }
+
+  &__range-label {
+    display: block;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  &__range-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.4px;
+  }
+
+  &__range-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--color-border-default);
+    margin: 0 16px;
+  }
+
+  &__month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px 8px;
+  }
+
+  &__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: background 0.15s ease;
+
+    &:hover { background: var(--color-bg-surface); }
+    &:disabled { opacity: 0.3; cursor: default; }
+  }
+
+  &__month-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 0 12px;
+    margin-bottom: 4px;
+  }
+
+  &__weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    padding: 4px 0;
+  }
+
+  &__calendar {
+    padding: 0 12px;
+  }
+
+  &__week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  &__day {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.1s ease;
+
+    &--empty {
+      pointer-events: none;
+      color: transparent;
+    }
+
+    &--today {
+      font-weight: 700;
+      color: var(--color-brand-default);
+    }
+
+    &--in-range {
+      background: var(--color-bg-brand-subtle);
+      border-radius: 0;
+      color: var(--color-text-primary);
+    }
+
+    &--start,
+    &--end {
+      background: var(--color-text-primary) !important;
+      color: var(--color-text-inverse) !important;
+      border-radius: 50% !important;
+      font-weight: 700;
+      z-index: 1;
+    }
+  }
+
+  &__footer {
+    padding: 16px 20px 0;
+  }
+
+  &__apply {
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--color-text-primary);
+    color: var(--color-text-inverse);
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.2px;
+    transition: opacity 0.15s ease;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

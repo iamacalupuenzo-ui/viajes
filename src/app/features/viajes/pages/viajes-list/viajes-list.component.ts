@@ -1,13 +1,15 @@
 import { Component, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { VIAJES_MOCK } from '../../data/viajes.mock';
 import { Viaje, ViajeGroup } from '../../models/viaje.model';
+import { FilterConfig } from '../../models/filter.model';
 import { ViajeCardComponent } from '../../components/viaje-card/viaje-card.component';
 import { SelectionActionsComponent } from '../../components/selection-actions/selection-actions.component';
+import { FilterDrawerComponent } from '../../components/filter-drawer/filter-drawer.component';
 
 @Component({
   selector: 'app-viajes-list',
   standalone: true,
-  imports: [ViajeCardComponent, SelectionActionsComponent],
+  imports: [ViajeCardComponent, SelectionActionsComponent, FilterDrawerComponent],
   templateUrl: './viajes-list.component.html',
   styleUrl: './viajes-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +20,8 @@ export class ViajesListComponent {
   selectedIds = signal<Set<string>>(new Set());
   selectedCount = computed(() => this.selectedIds().size);
   hasSelection = computed(() => this.selectedIds().size > 0);
+
+  showFilter = signal(false);
 
   isSelected(id: string): boolean {
     return this.selectedIds().has(id);
@@ -37,20 +41,21 @@ export class ViajesListComponent {
     console.log('Ver recorrido:', Array.from(this.selectedIds()));
   }
 
+  onFilterApply(config: FilterConfig): void {
+    console.log('Filter applied:', config);
+  }
+
   private buildGroups(viajes: Viaje[]): ViajeGroup[] {
     const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
     const map = new Map<string, Viaje[]>();
-
     for (const v of viajes) {
       const d = v.fechaViaje;
       const label = `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
       if (!map.has(label)) map.set(label, []);
       map.get(label)!.push(v);
     }
-
     return Array.from(map.entries()).map(([label, viajes]) => ({ label, viajes }));
   }
 }
