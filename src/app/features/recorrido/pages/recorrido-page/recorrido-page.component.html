@@ -44,25 +44,27 @@
 
   <!-- Trip selector + info de unidad -->
   @if (viajeIds().length > 0) {
-    <div class="recorrido__trips">
-      @for (id of viajeIds(); track id; let i = $index) {
-        <button
-          class="recorrido__trip-chip"
-          [class.recorrido__trip-chip--active]="activeId() === id"
-          [style.--c-bg]="tripColor(i).chipBg"
-          [style.--c-border]="tripColor(i).chipBorder"
-          [style.--c-text]="tripColor(i).chipText"
-          [style.--c-route]="tripColor(i).route"
-          (click)="selectViaje(id)"
-          type="button"
-        >
-          <svg class="recorrido__trip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 17H3V10L6 4H18L21 10V17H19M5 17H19M5 17C5 18.1 5.9 19 7 19C8.1 19 9 18.1 9 17M19 17C19 18.1 18.1 19 17 19C15.9 19 15 18.1 15 17M9 17H15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          {{ tripLabel(i) }}
-        </button>
-      }
-    </div>
+    @if (viajeIds().length > 1) {
+      <div class="recorrido__trips">
+        @for (id of viajeIds(); track id; let i = $index) {
+          <button
+            class="recorrido__trip-chip"
+            [class.recorrido__trip-chip--active]="activeId() === id"
+            [style.--c-bg]="tripColor(i).chipBg"
+            [style.--c-border]="tripColor(i).chipBorder"
+            [style.--c-text]="tripColor(i).chipText"
+            [style.--c-route]="tripColor(i).route"
+            (click)="selectViaje(id)"
+            type="button"
+          >
+            <svg class="recorrido__trip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M5 17H3V10L6 4H18L21 10V17H19M5 17H19M5 17C5 18.1 5.9 19 7 19C8.1 19 9 18.1 9 17M19 17C19 18.1 18.1 19 17 19C15.9 19 15 18.1 15 17M9 17H15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ tripLabel(i) }}
+          </button>
+        }
+      </div>
+    }
 
     @if (focusedRecorrido(); as r) {
       <div class="recorrido__map-panel-unit">
@@ -86,11 +88,14 @@
         [eventos]="filteredEventos()"
         [focusedId]="activeId()"
         [tripColors]="tripRouteColors()"
-        (eventSelected)="selectedEvent.set($event)"
+        [zoomBottom]="cardVisible() ? 96 : 16"
+        (eventSelected)="selectedEvent.set($event); selectedPoint.set(null)"
+        (pointSelected)="selectedPoint.set($event); selectedEvent.set(null)"
+        (tripSelected)="focusViaje($event)"
       />
     </div>
 
-    <!-- Event card flotando sobre el mapa (sin gradiente) -->
+    <!-- Cards flotantes sobre el mapa -->
     @if (selectedEvent(); as ev) {
       <div class="recorrido__map-panel">
         <div class="recorrido__event-card">
@@ -100,6 +105,23 @@
             <span class="recorrido__event-desc">{{ ev.descripcion }}</span>
           </div>
           <button class="recorrido__event-close" (click)="selectedEvent.set(null)" type="button" aria-label="Cerrar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (selectedPoint(); as pt) {
+      <div class="recorrido__map-panel">
+        <div class="recorrido__point-card">
+          <span class="recorrido__point-badge" [style.background]="pt.color">{{ pt.tipo === 'Inicio' ? 'A' : 'B' }}</span>
+          <div class="recorrido__point-body">
+            <span class="recorrido__point-tipo">{{ pt.tipo }} · Viaje {{ pt.tripNum }}</span>
+            <span class="recorrido__point-dir">{{ pt.direccion }}</span>
+          </div>
+          <button class="recorrido__event-close" (click)="selectedPoint.set(null)" type="button" aria-label="Cerrar">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
             </svg>

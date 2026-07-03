@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { RECORRIDO_MOCK } from '../../data/recorrido.mock';
 import { RecorridoData, EventoRecorrido, EventoTipo } from '../../models/recorrido.model';
-import { MapViewComponent } from '../../components/map-view/map-view.component';
+import { MapViewComponent, PointInfo } from '../../components/map-view/map-view.component';
 
 type ActiveTab = 'mapa' | 'historial';
 
@@ -61,6 +61,7 @@ export class RecorridoPageComponent implements OnInit {
   selectedTypes = signal<Set<EventoTipo>>(new Set());
 
   selectedEvent = signal<EventoRecorrido | null>(null);
+  selectedPoint = signal<PointInfo | null>(null);
 
   // Drag-to-close
   dragY       = signal(0);
@@ -107,17 +108,30 @@ export class RecorridoPageComponent implements OnInit {
     const raw = this.route.snapshot.queryParamMap.get('ids') ?? '';
     const ids = raw.split(',').filter(id => id.trim().length > 0);
     this.viajeIds.set(ids);
-    // No pre-seleccionamos ninguno: el mapa arranca mostrando todos
+    if (ids.length === 1) this.activeId.set(ids[0]);
   }
 
   tripColor(index: number): TripColor {
     return TRIP_COLORS[index % TRIP_COLORS.length];
   }
 
+  // Toggle desde chip: segundo click deselecciona
   selectViaje(id: string): void {
-    // Si ya está seleccionado, deselecciona (vuelve a ver todos)
+    if (this.viajeIds().length === 1) return;
     this.activeId.set(this.activeId() === id ? '' : id);
   }
+
+  // Selección desde mapa: siempre establece, nunca deselecciona al re-click
+  focusViaje(id: string): void {
+    if (id === '') {
+      if (this.viajeIds().length === 1) return;
+      this.activeId.set('');
+    } else {
+      this.activeId.set(id);
+    }
+  }
+
+  readonly cardVisible = computed(() => !!this.selectedEvent() || !!this.selectedPoint());
 
   toggleType(tipo: EventoTipo): void {
     const next = new Set(this.selectedTypes());

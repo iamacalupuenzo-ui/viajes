@@ -213,29 +213,26 @@
     white-space: nowrap;
   }
 
-  // ── Filter chip alineado a la derecha del unit ─────────────────────────────
+  // ── Botón Eventos — mismo estilo que "Filtrar" en viajes ──────────────────
   &__filter-chip {
-    height: 30px;
-    padding: 0 12px;
-    border-radius: 20px;
-    border: 1.5px solid var(--color-border-strong);
-    background: transparent;
-    color: var(--color-text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    background: var(--color-bg-surface);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
     flex-shrink: 0;
 
     &--active {
-      background: var(--color-text-primary);
-      border-color: var(--color-text-primary);
-      color: var(--color-text-inverse);
-      font-weight: 600;
+      background: var(--color-bg-brand-subtle);
+      color: var(--color-brand-default);
     }
   }
 
@@ -250,6 +247,56 @@
     color: #fff;
     font-size: 10px;
     font-weight: 700;
+  }
+
+  // ── Point card ─────────────────────────────────────────────────────────────
+  &__point-card {
+    background: var(--color-bg-default);
+    border-radius: 14px;
+    padding: 12px 12px 12px 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: card-up 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  &__point-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &__point-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__point-tipo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  &__point-dir {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   // ── Historial ──────────────────────────────────────────────────────────────

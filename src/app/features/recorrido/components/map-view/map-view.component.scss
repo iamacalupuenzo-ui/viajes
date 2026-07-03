@@ -75,8 +75,9 @@ app-map-view {
 
 // ── Leaflet zoom control position ─────────────────────────────────────────────
 .leaflet-bottom.leaflet-right {
-  bottom: 16px;
+  bottom: var(--zoom-bottom, 16px);
   right: 12px;
+  transition: bottom 0.25s ease;
 }
 
 .leaflet-control-zoom {
