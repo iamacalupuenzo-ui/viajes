@@ -2,9 +2,7 @@
   background: var(--color-bg-default);
   border-radius: 16px;
   padding: 14px 16px;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   cursor: pointer;
 

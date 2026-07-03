@@ -8,6 +8,20 @@
       </svg>
     </button>
     <h1 class="recorrido__title">Recorrido</h1>
+    <button
+      class="recorrido__filter-chip"
+      [class.recorrido__filter-chip--active]="activeFilterCount() > 0"
+      (click)="sheetOpen.set(true)"
+      type="button"
+    >
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Eventos
+      @if (activeFilterCount() > 0) {
+        <span class="recorrido__filter-badge">{{ activeFilterCount() }}</span>
+      }
+    </button>
   </header>
 
   <!-- Tabs -->
@@ -28,7 +42,7 @@
     >Historial</button>
   </div>
 
-  <!-- Trip selector + botón Eventos -->
+  <!-- Trip selector + info de unidad -->
   @if (viajeIds().length > 0) {
     <div class="recorrido__trips">
       @for (id of viajeIds(); track id; let i = $index) {
@@ -42,56 +56,13 @@
           (click)="selectViaje(id)"
           type="button"
         >
-          <span class="recorrido__trip-dot"></span>
+          <svg class="recorrido__trip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M5 17H3V10L6 4H18L21 10V17H19M5 17H19M5 17C5 18.1 5.9 19 7 19C8.1 19 9 18.1 9 17M19 17C19 18.1 18.1 19 17 19C15.9 19 15 18.1 15 17M9 17H15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           {{ tripLabel(i) }}
         </button>
       }
-      <button
-        class="recorrido__filter-chip"
-        [class.recorrido__filter-chip--active]="activeFilterCount() > 0"
-        (click)="sheetOpen.set(true)"
-        type="button"
-      >
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-          <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        Eventos
-        @if (activeFilterCount() > 0) {
-          <span class="recorrido__filter-badge">{{ activeFilterCount() }}</span>
-        }
-      </button>
     </div>
-  }
-
-  <!-- Map ocupa todo el espacio restante -->
-  @if (activeTab() === 'mapa') {
-    <div class="recorrido__map-wrapper">
-      <app-map-view
-        [recorridos]="allRecorridos()"
-        [eventos]="filteredEventos()"
-        [focusedId]="activeId()"
-        [tripColors]="tripRouteColors()"
-        (eventSelected)="selectedEvent.set($event)"
-      />
-    </div>
-  }
-
-  <!-- Panel inferior — solo info de unidad flotando sobre el mapa -->
-  <div class="recorrido__map-panel">
-    @if (selectedEvent(); as ev) {
-      <div class="recorrido__event-card">
-        <span class="recorrido__event-dot recorrido__event-dot--{{ ev.tipo }}"></span>
-        <div class="recorrido__event-body">
-          <span class="recorrido__event-tipo">{{ eventoLabel(ev.tipo) }}</span>
-          <span class="recorrido__event-desc">{{ ev.descripcion }}</span>
-        </div>
-        <button class="recorrido__event-close" (click)="selectedEvent.set(null)" type="button" aria-label="Cerrar">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-    }
 
     @if (focusedRecorrido(); as r) {
       <div class="recorrido__map-panel-unit">
@@ -105,7 +76,38 @@
         </span>
       </div>
     }
-  </div>
+  }
+
+  <!-- Map ocupa todo el espacio restante -->
+  @if (activeTab() === 'mapa') {
+    <div class="recorrido__map-wrapper">
+      <app-map-view
+        [recorridos]="allRecorridos()"
+        [eventos]="filteredEventos()"
+        [focusedId]="activeId()"
+        [tripColors]="tripRouteColors()"
+        (eventSelected)="selectedEvent.set($event)"
+      />
+    </div>
+
+    <!-- Event card flotando sobre el mapa (sin gradiente) -->
+    @if (selectedEvent(); as ev) {
+      <div class="recorrido__map-panel">
+        <div class="recorrido__event-card">
+          <span class="recorrido__event-dot recorrido__event-dot--{{ ev.tipo }}"></span>
+          <div class="recorrido__event-body">
+            <span class="recorrido__event-tipo">{{ eventoLabel(ev.tipo) }}</span>
+            <span class="recorrido__event-desc">{{ ev.descripcion }}</span>
+          </div>
+          <button class="recorrido__event-close" (click)="selectedEvent.set(null)" type="button" aria-label="Cerrar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  }
 
   <!-- Historial -->
   @if (activeTab() === 'historial') {
