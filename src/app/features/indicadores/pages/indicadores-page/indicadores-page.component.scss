@@ -58,9 +58,9 @@
   }
 
   &__title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
-    letter-spacing: -0.4px;
+    letter-spacing: -0.5px;
     margin: 0;
     color: var(--color-text-primary);
   }
@@ -106,9 +106,8 @@
     &:active { color: var(--color-text-secondary); }
 
     &--active {
-      color: var(--color-brand-default);
+      color: var(--color-text-primary);
       font-weight: 600;
-      background: var(--color-bg-brand-subtle);
       &::after { opacity: 1; transform: scaleX(1); }
     }
   }
@@ -117,11 +116,10 @@
   &__trips {
     display: flex;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 12px 16px 6px;
     overflow-x: auto;
     scrollbar-width: none;
     flex-shrink: 0;
-    border-bottom: 1px solid var(--color-border-default);
     background: var(--color-bg-default);
     &::-webkit-scrollbar { display: none; }
   }
@@ -217,7 +215,6 @@
     gap: 4px;
     padding: 2px 16px 10px;
     flex-shrink: 0;
-    border-bottom: 1px solid var(--color-border-default);
   }
 
   &__unit-rating-val {
@@ -231,7 +228,6 @@
     display: flex;
     align-items: center;
     padding: 8px 16px;
-    border-bottom: 1px solid var(--color-border-default);
     flex-shrink: 0;
     background: var(--color-bg-default);
   }

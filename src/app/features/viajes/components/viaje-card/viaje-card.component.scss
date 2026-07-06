@@ -1,22 +1,25 @@
 .card {
   background: var(--color-bg-default);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-xs);
   transition:
     box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
   cursor: pointer;
 
   &--selected {
+    border-color: var(--color-brand-default);
     box-shadow:
-      0 0 0 2px var(--color-brand-default),
-      0 8px 24px rgba(232, 96, 60, 0.14);
+      0 0 0 1px var(--color-brand-default),
+      0 8px 24px rgba(232, 96, 60, 0.12);
   }
 
   &:active {
     transform: scale(0.98);
-    box-shadow: var(--shadow-xs);
+    box-shadow: none;
   }
 
   // ── Header ──────────────────────────────────
@@ -37,10 +40,11 @@
   }
 
   &__unit {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--color-text-primary);
     white-space: nowrap;
+    letter-spacing: -0.3px;
   }
 
   &__gps {
@@ -141,7 +145,7 @@
   }
 
   &__address {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--color-text-primary);
     line-height: 1.4;
@@ -151,7 +155,7 @@
   }
 
   &__date {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--color-text-tertiary);
     line-height: 1.4;
   }
@@ -160,9 +164,8 @@
   &__footer {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--color-border-default);
+    gap: 14px;
+    padding-top: 4px;
   }
 
   &__stat {
@@ -175,10 +178,10 @@
   }
 
   &__price {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--color-text-primary);
     margin-left: auto;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
   }
 }
