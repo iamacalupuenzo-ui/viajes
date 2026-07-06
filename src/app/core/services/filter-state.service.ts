@@ -1,6 +1,7 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { FilterConfig, FilterPeriod } from '../../features/viajes/models/filter.model';
 import { UNITS_MOCK } from '../../features/viajes/data/units.mock';
+import { UsabilityTrackerService } from './usability-tracker.service';
 
 const TOTAL_UNITS = UNITS_MOCK.length;
 
@@ -13,6 +14,8 @@ const PERIOD_LABELS: Record<FilterPeriod, string> = {
 
 @Injectable({ providedIn: 'root' })
 export class FilterStateService {
+  private readonly tracker = inject(UsabilityTrackerService);
+
   readonly isOpen = signal(false);
   readonly activeConfig = signal<FilterConfig | null>(null);
 
@@ -32,12 +35,17 @@ export class FilterStateService {
     return (count === 0 || count >= TOTAL_UNITS) ? null : count;
   });
 
-  open(): void { this.isOpen.set(true); }
+  open(): void {
+    this.isOpen.set(true);
+    this.tracker.emit('filtro_abierto');
+  }
+
   close(): void { this.isOpen.set(false); }
 
   apply(config: FilterConfig): void {
     this.activeConfig.set(config);
     this.close();
+    this.tracker.emit('filtro_aplicado', config);
   }
 
   private fmtDate(d: Date): string {

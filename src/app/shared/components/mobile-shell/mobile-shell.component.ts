@@ -4,13 +4,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import { StatusBarComponent } from '../status-bar/status-bar.component';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav.component';
+import { TestHudComponent } from '../test-hud/test-hud.component';
 import { FilterDrawerComponent } from '../../../features/viajes/components/filter-drawer/filter-drawer.component';
 import { FilterStateService } from '../../../core/services/filter-state.service';
 
 @Component({
   selector: 'app-mobile-shell',
   standalone: true,
-  imports: [RouterOutlet, StatusBarComponent, BottomNavComponent, FilterDrawerComponent],
+  imports: [RouterOutlet, StatusBarComponent, BottomNavComponent, TestHudComponent, FilterDrawerComponent],
   templateUrl: './mobile-shell.component.html',
   styleUrl: './mobile-shell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

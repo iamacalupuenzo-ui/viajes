@@ -1,0 +1,13 @@
+@if (tracker.activeTask(); as task) {
+  <div class="test-hud">
+    <span class="test-hud__task">{{ task.id }}</span>
+    <span class="test-hud__timer">{{ fmt(tracker.elapsedMs()) }}</span>
+    <span class="test-hud__progress">hitos {{ progreso() }}</span>
+    <button class="test-hud__btn" (click)="tracker.markHelp()" type="button" aria-label="Marcar ayuda">
+      +A
+    </button>
+    <button class="test-hud__btn test-hud__btn--stop" (click)="tracker.stopTask('moderador')" type="button" aria-label="Detener tarea">
+      ■
+    </button>
+  </div>
+}

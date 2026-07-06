@@ -1,0 +1,204 @@
+<div class="perfil">
+
+  <header class="perfil__header">
+    <h1 class="perfil__title">Consola de test</h1>
+    <span class="perfil__test-name">{{ tracker.config.nombre }} · v{{ tracker.config.version }}</span>
+  </header>
+
+  <div class="perfil__scroll">
+
+    <!-- ═══ Sin sesión: registro de participante ═══ -->
+    @if (!tracker.session()) {
+      <section class="perfil__card">
+        <h2 class="perfil__section-title">Nuevo participante</h2>
+
+        <label class="perfil__field">
+          <span class="perfil__label">Alias</span>
+          <input
+            class="perfil__input"
+            type="text"
+            placeholder="Ej. P1 — Carlos"
+            [ngModel]="alias()"
+            (ngModelChange)="alias.set($event)"
+          />
+        </label>
+
+        <label class="perfil__field">
+          <span class="perfil__label">Perfil</span>
+          <select class="perfil__input" [ngModel]="perfil()" (ngModelChange)="perfil.set($event)">
+            <option>Operador nuevo</option>
+            <option>Operador experto</option>
+            <option>Supervisor de flota</option>
+            <option>Otro</option>
+          </select>
+        </label>
+
+        <label class="perfil__field">
+          <span class="perfil__label">Notas (opcional)</span>
+          <input
+            class="perfil__input"
+            type="text"
+            placeholder="Contexto del participante"
+            [ngModel]="notas()"
+            (ngModelChange)="notas.set($event)"
+          />
+        </label>
+
+        <button class="perfil__primary" [disabled]="!canStart()" (click)="startSession()" type="button">
+          Iniciar sesión de test
+        </button>
+      </section>
+    }
+
+    <!-- ═══ Sesión activa: tareas ═══ -->
+    @if (tracker.session(); as s) {
+      <section class="perfil__card perfil__card--active">
+        <div class="perfil__session-head">
+          <div>
+            <span class="perfil__participant">{{ s.participante.alias }}</span>
+            <span class="perfil__participant-meta">{{ s.participante.perfil }}</span>
+          </div>
+          <span class="perfil__badge">Sesión en curso</span>
+        </div>
+      </section>
+
+      @for (task of tracker.config.tareas; track task.id) {
+        <section
+          class="perfil__task"
+          [class.perfil__task--running]="tracker.activeRun()?.taskId === task.id"
+          [class.perfil__task--done]="completedTasks().has(task.id)"
+        >
+          <div class="perfil__task-head">
+            <span class="perfil__task-id">{{ task.id }}</span>
+            <span class="perfil__task-name">{{ task.nombre }}</span>
+
+            @if (completedTasks().get(task.id); as run) {
+              <span class="chip {{ classChip(run.clasificacionFinal) }}">
+                {{ resultLabels[run.clasificacionFinal!] }}
+              </span>
+            } @else if (tracker.activeRun()?.taskId !== task.id) {
+              <button
+                class="perfil__play"
+                (click)="tracker.startTask(task.id)"
+                [disabled]="!!tracker.activeRun()"
+                type="button"
+                aria-label="Iniciar tarea"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                  <path d="M4 2.5V11.5L11.5 7L4 2.5Z"/>
+                </svg>
+              </button>
+            }
+          </div>
+
+          <p class="perfil__task-scenario">{{ task.escenario }}</p>
+
+          <!-- Tarea corriendo: hitos en vivo -->
+          @if (tracker.activeRun()?.taskId === task.id) {
+            <div class="perfil__live">
+              <div class="perfil__live-row">
+                <span class="perfil__timer">{{ fmtDuration(tracker.elapsedMs()) }}</span>
+                <button class="perfil__help" (click)="tracker.markHelp()" type="button">
+                  + Ayuda dada ({{ tracker.activeRun()?.ayudas }})
+                </button>
+                <button class="perfil__stop" (click)="tracker.stopTask('moderador')" type="button">
+                  Detener
+                </button>
+              </div>
+              <ul class="perfil__hitos">
+                @for (hito of task.hitos; track hito.id) {
+                  <li
+                    class="perfil__hito"
+                    [class.perfil__hito--done]="tracker.hitosAlcanzados().has(hito.id)"
+                  >
+                    <span class="perfil__hito-check">
+                      @if (tracker.hitosAlcanzados().has(hito.id)) { ✓ }
+                    </span>
+                    {{ hito.label }}
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </section>
+      }
+
+      <button class="perfil__end" (click)="endSession()" type="button">
+        Finalizar y guardar sesión
+      </button>
+    }
+
+    <!-- ═══ Sesiones guardadas ═══ -->
+    @if (tracker.sessions().length > 0) {
+      <section class="perfil__results">
+        <div class="perfil__results-head">
+          <h2 class="perfil__section-title">Sesiones registradas ({{ tracker.sessions().length }})</h2>
+          <button class="perfil__export-all" (click)="tracker.exportAll()" type="button">
+            Exportar todo
+          </button>
+        </div>
+
+        @for (s of tracker.sessions(); track s.sessionId) {
+          <div class="perfil__session" (click)="toggleExpand(s.sessionId)">
+            <div class="perfil__session-row">
+              <div class="perfil__session-info">
+                <span class="perfil__participant">{{ s.participante.alias }}</span>
+                <span class="perfil__participant-meta">
+                  {{ s.participante.perfil }} · {{ fmtDate(s.fecha) }}
+                </span>
+              </div>
+              <div class="perfil__session-chips">
+                @for (task of tracker.config.tareas; track task.id) {
+                  @if (runFor(s, task.id); as run) {
+                    <span class="chip chip--mini {{ classChip(run.clasificacionFinal) }}">{{ task.id }}</span>
+                  } @else {
+                    <span class="chip chip--mini chip--skip">{{ task.id }}</span>
+                  }
+                }
+              </div>
+            </div>
+
+            @if (expandedSession() === s.sessionId) {
+              <div class="perfil__detail" (click)="$event.stopPropagation()">
+                @for (task of tracker.config.tareas; track task.id) {
+                  @if (runFor(s, task.id); as run) {
+                    <div class="perfil__detail-row">
+                      <span class="perfil__detail-task">{{ task.id }}</span>
+                      <span class="perfil__detail-meta">
+                        {{ fmtDuration(run.duracionMs) }} · {{ run.clicks.length }} clics ·
+                        {{ run.ayudas }} ayudas · fin: {{ run.finalizadoPor }}
+                      </span>
+                      <select
+                        class="perfil__detail-select"
+                        [value]="run.clasificacionFinal"
+                        (change)="onOverride(s.sessionId, task.id, $event)"
+                      >
+                        @for (key of resultKeys; track key) {
+                          <option [value]="key">{{ resultLabels[key] }}</option>
+                        }
+                      </select>
+                    </div>
+                  } @else {
+                    <div class="perfil__detail-row">
+                      <span class="perfil__detail-task">{{ task.id }}</span>
+                      <span class="perfil__detail-meta">no ejecutada</span>
+                    </div>
+                  }
+                }
+                <div class="perfil__detail-actions">
+                  <button class="perfil__link" (click)="tracker.exportSession(s.sessionId)" type="button">
+                    Exportar JSON
+                  </button>
+                  <button class="perfil__link perfil__link--danger" (click)="tracker.deleteSession(s.sessionId)" type="button">
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+  </div>
+</div>

@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UsabilityTrackerService } from '../../../../core/services/usability-tracker.service';
 import { RECORRIDO_MOCK } from '../../data/recorrido.mock';
 import { RecorridoData, EventoRecorrido, EventoTipo } from '../../models/recorrido.model';
 import { MapViewComponent, PointInfo } from '../../components/map-view/map-view.component';
@@ -64,6 +65,7 @@ const TRIP_COLORS: TripColor[] = [
 export class RecorridoPageComponent implements OnInit {
   private readonly route  = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly usabTracker = inject(UsabilityTrackerService);
 
   readonly sheetItems   = SHEET_ITEMS;
   readonly shareFormats = SHARE_FORMATS;
@@ -218,6 +220,16 @@ export class RecorridoPageComponent implements OnInit {
     }
   }
 
+  setTab(tab: ActiveTab): void {
+    this.activeTab.set(tab);
+    if (tab === 'historial') this.usabTracker.emit('historial_abierto');
+  }
+
+  openShare(): void {
+    this.shareOpen.set(true);
+    this.usabTracker.emit('compartir_abierto');
+  }
+
   toggleFormat(id: string): void {
     const next = new Set(this.selectedFormats());
     if (next.has(id)) next.delete(id); else next.add(id);
@@ -232,6 +244,11 @@ export class RecorridoPageComponent implements OnInit {
     this.dragY.set(0);
     this.isDragging.set(false);
     this.shareOpen.set(false);
+  }
+
+  confirmShare(): void {
+    this.usabTracker.emit('compartir_confirmado', { formatos: [...this.selectedFormats()] });
+    this.applyShare();
   }
 
   goBack(): void {

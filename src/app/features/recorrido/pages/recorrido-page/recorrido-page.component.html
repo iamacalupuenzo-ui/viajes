@@ -29,14 +29,14 @@
     <button
       class="recorrido__tab"
       [class.recorrido__tab--active]="activeTab() === 'mapa'"
-      (click)="activeTab.set('mapa')"
+      (click)="setTab('mapa')"
       role="tab"
       type="button"
     >Mapa</button>
     <button
       class="recorrido__tab"
       [class.recorrido__tab--active]="activeTab() === 'historial'"
-      (click)="activeTab.set('historial')"
+      (click)="setTab('historial')"
       role="tab"
       type="button"
     >Historial</button>
@@ -205,7 +205,7 @@
       </div>
 
       <div class="recorrido__share-bar">
-        <button class="recorrido__share-btn" type="button" (click)="shareOpen.set(true)">Compartir</button>
+        <button class="recorrido__share-btn" type="button" (click)="openShare()">Compartir</button>
       </div>
 
     </div>
@@ -333,7 +333,7 @@
       <div class="recorrido__sheet-footer">
         <button
           class="recorrido__sheet-apply"
-          (click)="applyShare()"
+          (click)="confirmShare()"
           [disabled]="selectedFormatCount() === 0"
           type="button"
         >

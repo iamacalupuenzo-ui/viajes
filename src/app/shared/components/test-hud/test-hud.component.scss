@@ -1,0 +1,61 @@
+.test-hud {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60; // sobre sheets (31) y nav (25)
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 6px 0 10px;
+  background: rgba(26, 24, 20, 0.88);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+  animation: hud-in var(--duration-base) var(--ease-spring);
+
+  &__task {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  &__timer {
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--orange-300);
+  }
+
+  &__progress {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    min-width: 26px;
+    padding: 0 6px;
+    border-radius: var(--radius-full);
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+
+    &--stop { background: var(--red-500); }
+  }
+}
+
+@keyframes hud-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

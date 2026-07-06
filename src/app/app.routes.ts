@@ -12,5 +12,12 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/indicadores/indicadores.routes').then(m => m.INDICADORES_ROUTES),
   },
+  {
+    path: 'perfil',
+    loadComponent: () =>
+      import('./features/perfil/pages/perfil-page/perfil-page.component').then(
+        m => m.PerfilPageComponent
+      ),
+  },
   { path: '**', redirectTo: 'viajes' },
 ];

@@ -6,6 +6,7 @@ import { Viaje, ViajeGroup } from '../../models/viaje.model';
 import { ViajeCardComponent } from '../../components/viaje-card/viaje-card.component';
 import { SelectionActionsComponent } from '../../components/selection-actions/selection-actions.component';
 import { FilterStateService } from '../../../../core/services/filter-state.service';
+import { UsabilityTrackerService } from '../../../../core/services/usability-tracker.service';
 
 const TOTAL_UNITS = UNITS_MOCK.length;
 
@@ -20,6 +21,7 @@ const TOTAL_UNITS = UNITS_MOCK.length;
 export class ViajesListComponent {
   readonly filterState = inject(FilterStateService);
   private readonly router = inject(Router);
+  private readonly tracker = inject(UsabilityTrackerService);
 
   readonly MAX_SELECTION = 5;
 
@@ -102,6 +104,7 @@ export class ViajesListComponent {
       next.add(id);
     }
     this.selectedIds.set(next);
+    this.tracker.emit('viaje_seleccionado', { count: next.size });
   }
 
   onLimpiar(): void { this.selectedIds.set(new Set()); }
