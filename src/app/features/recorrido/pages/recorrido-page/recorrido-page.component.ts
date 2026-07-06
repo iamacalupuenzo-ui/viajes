@@ -13,6 +13,10 @@ import { MapViewComponent, PointInfo } from '../../components/map-view/map-view.
 
 type ActiveTab = 'mapa' | 'historial';
 
+type HistorialItem =
+  | { kind: 'header'; id: string; recorrido: RecorridoData }
+  | { kind: 'evento'; id: string; evento: EventoRecorrido; isLast: boolean };
+
 interface SheetItem {
   tipo: EventoTipo;
   label: string;
@@ -30,6 +34,13 @@ const SHEET_ITEMS: SheetItem[] = [
   { tipo: 'exceso_velocidad', label: 'Exceso de velocidad'     },
   { tipo: 'reinicio',         label: 'Ignition On / Off'       },
   { tipo: 'parada',           label: 'Parada prolongada'       },
+];
+
+interface ShareFormat { id: string; label: string; }
+const SHARE_FORMATS: ShareFormat[] = [
+  { id: 'xlm',  label: 'Formato XLM'  },
+  { id: 'pdf',  label: 'Formato PDF'  },
+  { id: 'html', label: 'Formato HTML' },
 ];
 
 const TRIP_COLORS: TripColor[] = [
@@ -52,13 +63,18 @@ export class RecorridoPageComponent implements OnInit {
   private readonly route  = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  readonly sheetItems = SHEET_ITEMS;
+  readonly sheetItems   = SHEET_ITEMS;
+  readonly shareFormats = SHARE_FORMATS;
 
   viajeIds      = signal<string[]>([]);
   activeId      = signal<string>('');   // viaje enfocado en el mapa (vacío = ver todos)
   activeTab     = signal<ActiveTab>('mapa');
-  sheetOpen     = signal(false);
-  selectedTypes = signal<Set<EventoTipo>>(new Set());
+  sheetOpen       = signal(false);
+  shareOpen       = signal(false);
+  selectedTypes   = signal<Set<EventoTipo>>(new Set());
+  selectedFormats = signal<Set<string>>(new Set());
+
+  readonly selectedFormatCount = computed(() => this.selectedFormats().size);
 
   selectedEvent = signal<EventoRecorrido | null>(null);
   selectedPoint = signal<PointInfo | null>(null);
@@ -104,10 +120,29 @@ export class RecorridoPageComponent implements OnInit {
 
   readonly activeFilterCount = computed(() => this.selectedTypes().size);
 
-  readonly historialEventos = computed<EventoRecorrido[]>(() => {
+  readonly historialItems = computed<HistorialItem[]>(() => {
     const focused = this.focusedRecorrido();
-    const events = focused ? focused.eventos : this.allRecorridos().flatMap(r => r.eventos);
-    return [...events].sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+
+    if (focused) {
+      const sorted = [...focused.eventos].sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+      return sorted.map((ev, i) => ({
+        kind: 'evento' as const,
+        id: `e-${ev.id}`,
+        evento: ev,
+        isLast: i === sorted.length - 1,
+      }));
+    }
+
+    const items: HistorialItem[] = [];
+    for (const r of this.allRecorridos()) {
+      const sorted = [...r.eventos].sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+      if (sorted.length === 0) continue;
+      items.push({ kind: 'header', id: `h-${r.viajeId}`, recorrido: r });
+      sorted.forEach((ev, i) =>
+        items.push({ kind: 'evento', id: `e-${ev.id}`, evento: ev, isLast: i === sorted.length - 1 })
+      );
+    }
+    return items;
   });
 
   ngOnInit(): void {
@@ -179,6 +214,22 @@ export class RecorridoPageComponent implements OnInit {
       this.dragY.set(0);
       this.isDragging.set(false);
     }
+  }
+
+  toggleFormat(id: string): void {
+    const next = new Set(this.selectedFormats());
+    if (next.has(id)) next.delete(id); else next.add(id);
+    this.selectedFormats.set(next);
+  }
+
+  isFormatSelected(id: string): boolean {
+    return this.selectedFormats().has(id);
+  }
+
+  applyShare(): void {
+    this.dragY.set(0);
+    this.isDragging.set(false);
+    this.shareOpen.set(false);
   }
 
   goBack(): void {

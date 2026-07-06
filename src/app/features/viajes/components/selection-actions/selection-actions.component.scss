@@ -7,6 +7,7 @@
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--color-border-default);
   flex-shrink: 0;
+  animation: actions-up var(--duration-slow) var(--ease-spring) both;
 
   &__btn {
     flex: 1;
@@ -15,13 +16,16 @@
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.1s ease, opacity 0.15s ease;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
     font-family: inherit;
     letter-spacing: -0.1px;
 
     &:active {
       transform: scale(0.97);
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
     &--outline {
@@ -34,7 +38,14 @@
       background: var(--color-brand-default);
       border: none;
       color: #fff;
-      box-shadow: 0 4px 12px rgba(232, 96, 60, 0.35);
+      box-shadow: var(--shadow-brand);
+
+      &:active { box-shadow: 0 2px 6px rgba(232, 96, 60, 0.25); }
     }
   }
+}
+
+@keyframes actions-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: none;             opacity: 1; }
 }

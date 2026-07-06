@@ -136,54 +136,69 @@
     <div class="recorrido__historial-view">
 
       <div class="recorrido__timeline" role="list">
-        @for (ev of historialEventos(); track ev.id; let last = $last) {
-          <div class="recorrido__tl-item" role="listitem">
+        @for (item of historialItems(); track item.id) {
 
-            <!-- Track: dot + connecting line -->
-            <div class="recorrido__tl-track">
-              <span class="recorrido__tl-dot recorrido__tl-dot--{{ ev.tipo }}">
-                @switch (ev.tipo) {
-                  @case ('alerta') {
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                      <path d="M10 2L18 17H2L10 2Z" fill="white"/>
-                      <path d="M10 9V12" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round"/>
-                      <circle cx="10" cy="14.5" r="0.8" fill="#EF4444"/>
-                    </svg>
+          @if (item.kind === 'header') {
+            <div class="recorrido__tl-trip-header">
+              <span class="recorrido__unit-placa">{{ item.recorrido.placa }}</span>
+              <span class="recorrido__unit-gps">{{ item.recorrido.codigoMotor }}</span>
+              <span class="recorrido__unit-rating">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="var(--yellow-500)">
+                  <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"/>
+                </svg>
+                {{ item.recorrido.rating }}
+              </span>
+            </div>
+          }
+
+          @if (item.kind === 'evento') {
+            <div class="recorrido__tl-item" role="listitem">
+
+              <div class="recorrido__tl-track">
+                <span class="recorrido__tl-dot recorrido__tl-dot--{{ item.evento.tipo }}">
+                  @switch (item.evento.tipo) {
+                    @case ('alerta') {
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2L18 17H2L10 2Z" fill="white"/>
+                        <path d="M10 9V12" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="10" cy="14.5" r="0.8" fill="#EF4444"/>
+                      </svg>
+                    }
+                    @case ('exceso_velocidad') {
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 15C4 11.13 7.13 8 11 8M11 8L8.5 10.5M11 8L8.5 5.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="11" cy="15" r="2" fill="white"/>
+                      </svg>
+                    }
+                    @case ('reinicio') {
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3V8L13 6.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 9A7 7 0 1 1 10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    }
+                    @case ('parada') {
+                      <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                        <rect x="3" y="3" width="14" height="14" rx="2.5" fill="white"/>
+                      </svg>
+                    }
                   }
-                  @case ('exceso_velocidad') {
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 15C4 11.13 7.13 8 11 8M11 8L8.5 10.5M11 8L8.5 5.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                      <circle cx="11" cy="15" r="2" fill="white"/>
-                    </svg>
-                  }
-                  @case ('reinicio') {
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                      <path d="M10 3V8L13 6.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M16 9A7 7 0 1 1 10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-                    </svg>
-                  }
-                  @case ('parada') {
-                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
-                      <rect x="3" y="3" width="14" height="14" rx="2.5" fill="white"/>
-                    </svg>
-                  }
+                </span>
+                @if (!item.isLast) {
+                  <span class="recorrido__tl-line"></span>
                 }
-              </span>
-              @if (!last) {
-                <span class="recorrido__tl-line"></span>
-              }
-            </div>
+              </div>
 
-            <!-- Content -->
-            <div class="recorrido__tl-body">
-              <span class="recorrido__tl-badge recorrido__tl-badge--{{ ev.tipo }}">
-                {{ historialLabel(ev.tipo) }}
-              </span>
-              <span class="recorrido__tl-dir">{{ ev.direccion }}</span>
-              <span class="recorrido__tl-meta">{{ formatHistorialDate(ev.fecha) }} · {{ ev.descripcion }}</span>
-            </div>
+              <div class="recorrido__tl-body">
+                <span class="recorrido__tl-badge recorrido__tl-badge--{{ item.evento.tipo }}">
+                  {{ historialLabel(item.evento.tipo) }}
+                </span>
+                <span class="recorrido__tl-dir">{{ item.evento.direccion }}</span>
+                <span class="recorrido__tl-meta">{{ formatHistorialDate(item.evento.fecha) }} · {{ item.evento.descripcion }}</span>
+              </div>
 
-          </div>
+            </div>
+          }
+
         } @empty {
           <div class="recorrido__tl-empty">
             <p>Sin eventos registrados</p>
@@ -192,7 +207,7 @@
       </div>
 
       <div class="recorrido__share-bar">
-        <button class="recorrido__share-btn" type="button">Compartir</button>
+        <button class="recorrido__share-btn" type="button" (click)="shareOpen.set(true)">Compartir</button>
       </div>
 
     </div>
@@ -262,6 +277,69 @@
           type="button"
         >
           Aplicar ({{ activeFilterCount() }} seleccionados)
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Share bottom sheet -->
+  @if (shareOpen()) {
+    <div class="recorrido__backdrop" (click)="applyShare()" aria-hidden="true"></div>
+
+    <div
+      class="recorrido__sheet"
+      role="dialog"
+      aria-label="Compartir historial"
+      [style.transform]="dragY() > 0 ? 'translateY(' + dragY() + 'px)' : ''"
+      [style.transition]="isDragging() ? 'none' : ''"
+    >
+      <div
+        class="recorrido__sheet-handle-area"
+        (touchstart)="onDragStart($event)"
+        (touchmove)="onDragMove($event)"
+        (touchend)="onDragEnd()"
+      >
+        <div class="recorrido__sheet-handle"></div>
+      </div>
+
+      <div class="recorrido__sheet-header">
+        <span class="recorrido__sheet-title">Compartir</span>
+        <button class="recorrido__sheet-close" (click)="applyShare()" type="button" aria-label="Cerrar">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="recorrido__sheet-list">
+        @for (fmt of shareFormats; track fmt.id) {
+          <div
+            class="recorrido__sheet-row"
+            [class.recorrido__sheet-row--checked]="isFormatSelected(fmt.id)"
+            (click)="toggleFormat(fmt.id)"
+            role="checkbox"
+            [attr.aria-checked]="isFormatSelected(fmt.id)"
+          >
+            <span class="recorrido__sheet-check">
+              @if (isFormatSelected(fmt.id)) {
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+            </span>
+            <span class="recorrido__sheet-label">{{ fmt.label }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="recorrido__sheet-footer">
+        <button
+          class="recorrido__sheet-apply"
+          (click)="applyShare()"
+          [disabled]="selectedFormatCount() === 0"
+          type="button"
+        >
+          Compartir ({{ selectedFormatCount() }} seleccionados)
         </button>
       </div>
     </div>

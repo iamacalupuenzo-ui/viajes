@@ -1,19 +1,22 @@
 .card {
   background: var(--color-bg-default);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 14px 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
   cursor: pointer;
 
   &--selected {
     box-shadow:
       0 0 0 2px var(--color-brand-default),
-      0 4px 16px rgba(232, 96, 60, 0.15);
+      0 8px 24px rgba(232, 96, 60, 0.14);
   }
 
   &:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
+    box-shadow: var(--shadow-xs);
   }
 
   // ── Header ──────────────────────────────────
@@ -81,6 +84,11 @@
     width: 22px;
     height: 22px;
     flex-shrink: 0;
+    transition: transform var(--duration-fast) var(--ease-out);
+
+    &:active { transform: scale(0.85); }
+
+    svg { transition: opacity var(--duration-fast) var(--ease-out); }
 
     &--disabled {
       opacity: 0.35;

@@ -44,9 +44,14 @@
     color: var(--color-text-secondary);
     cursor: pointer;
     font-family: inherit;
-    transition: background 0.15s ease;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
 
-    &:active { background: var(--color-border-default); }
+    &:active {
+      background: var(--color-border-default);
+      transform: scale(0.96);
+    }
   }
 
   // ── Subheader: pill + counter en misma fila ──
@@ -168,5 +173,18 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    // Entrada escalonada: las primeras cards suben en cascada
+    > * {
+      animation: card-in var(--duration-slow) var(--ease-out) both;
+    }
+    @for $i from 1 through 8 {
+      > *:nth-child(#{$i}) { animation-delay: #{($i - 1) * 35}ms; }
+    }
   }
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
 }

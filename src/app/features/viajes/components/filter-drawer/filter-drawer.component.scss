@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform 0.32s var(--ease-spring);
 
   &--open {
     transform: translateX(0);
@@ -104,7 +104,7 @@
   &__chip {
     height: 36px;
     padding: 0 16px;
-    border-radius: 20px;
+    border-radius: var(--radius-full);
     border: 1.5px solid var(--color-border-default);
     background: var(--color-bg-default);
     color: var(--color-text-secondary);
@@ -112,8 +112,14 @@
     font-weight: 500;
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.15s ease;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
     white-space: nowrap;
+
+    &:active { transform: scale(0.94); }
 
     &--active {
       background: var(--color-text-primary);
@@ -179,7 +185,11 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all 0.15s ease;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+
+    svg { animation: check-pop var(--duration-base) var(--ease-bounce); }
 
     &--checked {
       background: var(--color-text-primary);
@@ -213,7 +223,9 @@
     cursor: pointer;
     font-family: inherit;
     letter-spacing: -0.2px;
-    transition: opacity 0.15s ease;
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
 
     &:disabled {
       opacity: 0.3;
@@ -221,7 +233,13 @@
     }
 
     &:active:not(:disabled) {
-      opacity: 0.85;
+      opacity: 0.9;
+      transform: scale(0.98);
     }
   }
+}
+
+@keyframes check-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
 }
