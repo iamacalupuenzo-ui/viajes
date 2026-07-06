@@ -104,6 +104,12 @@ export class RecorridoPageComponent implements OnInit {
 
   readonly activeFilterCount = computed(() => this.selectedTypes().size);
 
+  readonly historialEventos = computed<EventoRecorrido[]>(() => {
+    const focused = this.focusedRecorrido();
+    const events = focused ? focused.eventos : this.allRecorridos().flatMap(r => r.eventos);
+    return [...events].sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+  });
+
   ngOnInit(): void {
     const raw = this.route.snapshot.queryParamMap.get('ids') ?? '';
     const ids = raw.split(',').filter(id => id.trim().length > 0);
@@ -191,5 +197,28 @@ export class RecorridoPageComponent implements OnInit {
       parada:           'Parada prolongada',
     };
     return labels[tipo];
+  }
+
+  historialLabel(tipo: EventoTipo): string {
+    const labels: Record<EventoTipo, string> = {
+      alerta:           'Frenada brusca',
+      exceso_velocidad: 'Exceso de velocidad',
+      reinicio:         'Ignition On',
+      parada:           'Zona restringida',
+    };
+    return labels[tipo];
+  }
+
+  formatHistorialDate(fecha: Date): string {
+    const days   = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const d   = days[fecha.getDay()];
+    const mo  = months[fecha.getMonth()];
+    const day = fecha.getDate();
+    const h   = fecha.getHours();
+    const m   = fecha.getMinutes().toString().padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12  = h % 12 || 12;
+    return `${d} ${day} ${mo} · ${h12}:${m} ${ampm}`;
   }
 }

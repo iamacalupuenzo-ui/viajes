@@ -95,44 +95,6 @@
     margin-bottom: 14px;
   }
 
-  &__route-track {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 4px;
-    gap: 0;
-    flex-shrink: 0;
-  }
-
-  &__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-
-    &--top {
-      background: var(--color-text-primary);
-    }
-
-    &--bottom {
-      background: var(--color-brand-default);
-    }
-  }
-
-  &__track-line {
-    width: 1.5px;
-    flex: 1;
-    min-height: 18px;
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--color-border-strong) 0px,
-      var(--color-border-strong) 3px,
-      transparent 3px,
-      transparent 6px
-    );
-    margin: 3px 0;
-  }
-
   &__route-points {
     flex: 1;
     display: flex;
@@ -157,6 +119,10 @@
     flex-shrink: 0;
     margin-top: 1px;
     letter-spacing: 0.3px;
+
+    &--a {
+      background: var(--color-brand-default);
+    }
   }
 
   &__point-info {

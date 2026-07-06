@@ -37,21 +37,16 @@
 
   <!-- Route visualization -->
   <div class="card__route">
-    <div class="card__route-track">
-      <span class="card__dot card__dot--top"></span>
-      <span class="card__track-line"></span>
-      <span class="card__dot card__dot--bottom"></span>
-    </div>
     <div class="card__route-points">
       <div class="card__point">
-        <span class="card__point-label">B</span>
+        <span class="card__point-label card__point-label--b">B</span>
         <div class="card__point-info">
           <span class="card__address">{{ viaje().puntoB.direccion }}</span>
           <span class="card__date">{{ formatDate(viaje().puntoB.fecha) }}</span>
         </div>
       </div>
       <div class="card__point">
-        <span class="card__point-label">A</span>
+        <span class="card__point-label card__point-label--a">A</span>
         <div class="card__point-info">
           <span class="card__address">{{ viaje().puntoA.direccion }}</span>
           <span class="card__date">{{ formatDate(viaje().puntoA.fecha) }}</span>

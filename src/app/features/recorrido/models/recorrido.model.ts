@@ -4,6 +4,7 @@ export interface EventoRecorrido {
   id: string;
   tipo: EventoTipo;
   coords: [number, number];
+  direccion: string;
   descripcion: string;
   fecha: Date;
 }
