@@ -1,3 +1,13 @@
+// Overlay: el nav flota sobre el contenido, no ocupa espacio en el layout
+:host {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  pointer-events: none; // los márgenes alrededor del pill no bloquean el contenido
+}
+
 .bottom-nav {
   display: flex;
   align-items: center;
@@ -11,6 +21,7 @@
   flex-shrink: 0;
   padding: 0 10px;
   margin: 10px 16px calc(14px + env(safe-area-inset-bottom, 0));
+  pointer-events: auto;
 
   &__item {
     flex: 1;

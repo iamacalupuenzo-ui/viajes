@@ -24,6 +24,7 @@
     isolation: isolate;
     display: flex;
     flex-direction: column;
+    border-top: 1px solid var(--color-border-default);
   }
 
   // ── Header ─────────────────────────────────────────────────────────────────
@@ -116,7 +117,7 @@
   &__trips {
     display: flex;
     gap: 8px;
-    padding: 12px 16px 6px;
+    padding: 14px 16px;
     overflow-x: auto;
     scrollbar-width: none;
     flex-shrink: 0;
