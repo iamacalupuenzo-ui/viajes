@@ -12,9 +12,9 @@
 
   &--selected {
     border-color: var(--color-brand-default);
-    box-shadow:
-      0 0 0 1px var(--color-brand-default),
-      0 8px 24px rgba(232, 96, 60, 0.12);
+    // Refuerza el borde a 2px efectivos, sin glow: con multi-selección
+    // los halos naranjas se acumulan y saturan la lista.
+    box-shadow: 0 0 0 1px var(--color-brand-default);
   }
 
   &:active {

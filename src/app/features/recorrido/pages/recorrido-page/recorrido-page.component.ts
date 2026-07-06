@@ -43,12 +43,14 @@ const SHARE_FORMATS: ShareFormat[] = [
   { id: 'html', label: 'Formato HTML' },
 ];
 
+// Paleta de rutas: evita los colores semánticos de eventos
+// (rojo=alerta, naranja=exceso, azul=ignition, violeta=zona) y el brand.
 const TRIP_COLORS: TripColor[] = [
-  { route: '#3B82F6', chipBg: '#EFF6FF', chipBorder: '#BFDBFE', chipText: '#1D4ED8' },
-  { route: '#10B981', chipBg: '#ECFDF5', chipBorder: '#A7F3D0', chipText: '#065F46' },
-  { route: '#8B5CF6', chipBg: '#F5F3FF', chipBorder: '#DDD6FE', chipText: '#5B21B6' },
-  { route: '#F97316', chipBg: '#FFF7ED', chipBorder: '#FED7AA', chipText: '#C2410C' },
-  { route: '#EC4899', chipBg: '#FDF2F8', chipBorder: '#FBCFE8', chipText: '#9D174D' },
+  { route: '#0D9488', chipBg: '#F0FDFA', chipBorder: '#99F6E4', chipText: '#0F766E' }, // teal
+  { route: '#4F46E5', chipBg: '#EEF2FF', chipBorder: '#C7D2FE', chipText: '#4338CA' }, // indigo
+  { route: '#DB2777', chipBg: '#FDF2F8', chipBorder: '#FBCFE8', chipText: '#BE185D' }, // magenta
+  { route: '#059669', chipBg: '#ECFDF5', chipBorder: '#A7F3D0', chipText: '#047857' }, // green
+  { route: '#0891B2', chipBg: '#ECFEFF', chipBorder: '#A5F3FC', chipText: '#0E7490' }, // cyan
 ];
 
 @Component({

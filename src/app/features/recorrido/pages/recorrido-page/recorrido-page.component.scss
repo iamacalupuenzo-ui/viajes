@@ -162,14 +162,13 @@
     }
   }
 
-  &__trip-icon {
+  &__trip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-route, var(--color-text-secondary));
     flex-shrink: 0;
-    color: var(--c-text, var(--color-text-secondary));
-    transition: color 0.2s;
-
-    .recorrido__trip-chip--active & {
-      color: rgba(255, 255, 255, 0.9);
-    }
+    transition: background var(--duration-base) var(--ease-out);
   }
 
   // ── Panel flotante — solo para event card, sin gradiente ─────────────────
