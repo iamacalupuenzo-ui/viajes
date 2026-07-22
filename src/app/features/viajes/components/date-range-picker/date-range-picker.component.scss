@@ -47,6 +47,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 20px;
+    gap: 8px;
   }
 
   &__title {
@@ -54,6 +55,17 @@
     font-weight: 700;
     color: var(--color-text-primary);
     letter-spacing: -0.3px;
+    flex: 1;
+  }
+
+  &__limit {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    background: var(--color-bg-surface);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
   }
 
   &__close {
@@ -207,6 +219,12 @@
       border-radius: 10px !important;
       font-weight: 700;
       z-index: 1;
+    }
+
+    &--disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 

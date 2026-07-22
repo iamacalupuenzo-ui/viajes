@@ -8,9 +8,9 @@ export const routes: Routes = [
       import('./features/viajes/viajes.routes').then(m => m.VIAJES_ROUTES),
   },
   {
-    path: 'indicadores',
+    path: 'recorridos',
     loadChildren: () =>
-      import('./features/indicadores/indicadores.routes').then(m => m.INDICADORES_ROUTES),
+      import('./features/recorridos/recorridos.routes').then(m => m.RECORRIDOS_ROUTES),
   },
   {
     path: 'perfil',

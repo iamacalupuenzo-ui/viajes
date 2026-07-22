@@ -9,6 +9,8 @@
       <app-bottom-nav />
       <app-filter-drawer
         [isOpen]="filterState.isOpen()"
+        [showPeriod]="filterState.drawerShowPeriod()"
+        [initialPeriod]="filterState.activeConfig()?.period ?? 'todo'"
         (close)="filterState.close()"
         (apply)="filterState.apply($event)"
       />

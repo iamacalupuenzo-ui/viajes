@@ -18,7 +18,7 @@ interface NavItem {
 export class BottomNavComponent {
   readonly items: NavItem[] = [
     { label: 'Home', route: '/home', icon: 'home' },
-    { label: 'Indicadores', route: '/indicadores', icon: 'chart' },
+    { label: 'Recorridos', route: '/recorridos', icon: 'chart' },
     { label: 'Viajes', route: '/viajes', icon: 'car' },
     { label: 'Perfil', route: '/perfil', icon: 'person' },
   ];

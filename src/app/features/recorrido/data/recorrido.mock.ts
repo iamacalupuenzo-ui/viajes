@@ -338,4 +338,174 @@ export const RECORRIDO_MOCK: RecorridoData[] = [
     ruta: [[-12.0620, -77.0800]],
     eventos: [],
   },
+
+  // ── Nuevos viajes ──────────────────────────────
+  // Jul 1 · D4G-821
+  {
+    viajeId: '13',
+    placa: 'D4G-821', codigoMotor: '2847391020', rating: 3.9,
+    puntoA: { label: 'A', direccion: 'Av. Argentina 3093, Callao',           fecha: new Date('2026-07-01T11:00:00'), coords: [-12.0454, -77.0980] },
+    puntoB: { label: 'B', direccion: 'Av. Nicolás Ayllón 2408, Ate',        fecha: new Date('2026-07-01T12:30:00'), coords: [-12.0264, -76.9100] },
+    ruta: [[-12.0400, -77.0400], [-12.0350, -77.0000], [-12.0300, -76.9600]],
+    eventos: [],
+  },
+  {
+    viajeId: '14',
+    placa: 'D4G-821', codigoMotor: '2847391020', rating: 4.4,
+    puntoA: { label: 'A', direccion: 'Av. Nicolás Ayllón 2408, Ate',        fecha: new Date('2026-07-01T14:00:00'), coords: [-12.0264, -76.9100] },
+    puntoB: { label: 'B', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-07-01T15:20:00'), coords: [-12.1025, -77.0289] },
+    ruta: [[-12.0500, -76.9600], [-12.0800, -76.9900], [-12.1000, -77.0100]],
+    eventos: [],
+  },
+
+  // Jul 1 · H2P-783
+  {
+    viajeId: '15',
+    placa: 'H2P-783', codigoMotor: '3318927401', rating: 4.7,
+    puntoA: { label: 'A', direccion: 'Av. Separadora Industrial 2450, Ate', fecha: new Date('2026-07-01T07:00:00'), coords: [-12.0264, -76.9100] },
+    puntoB: { label: 'B', direccion: 'Calle Los Ingenieros 480, La Molina', fecha: new Date('2026-07-01T09:10:00'), coords: [-12.0822, -76.9432] },
+    ruta: [[-12.0400, -76.9200], [-12.0600, -76.9300], [-12.0700, -76.9350]],
+    eventos: [],
+  },
+  {
+    viajeId: '16',
+    placa: 'H2P-783', codigoMotor: '3318927401', rating: 4.5,
+    puntoA: { label: 'A', direccion: 'Av. Industrial 2340, Breña',          fecha: new Date('2026-07-01T17:00:00'), coords: [-12.0492, -77.0531] },
+    puntoB: { label: 'B', direccion: 'Av. San Borja Norte 952, San Borja',  fecha: new Date('2026-07-01T18:30:00'), coords: [-12.1025, -76.9950] },
+    ruta: [[-12.0600, -77.0300], [-12.0800, -77.0100], [-12.0950, -76.9980]],
+    eventos: [],
+  },
+
+  // Jul 1 · C9B-447
+  {
+    viajeId: '17',
+    placa: 'C9B-447', codigoMotor: '0934127856', rating: 3.8,
+    puntoA: { label: 'A', direccion: 'Av. Néstor Gambetta 3500, Callao',    fecha: new Date('2026-07-01T07:30:00'), coords: [-12.0200, -77.1200] },
+    puntoB: { label: 'B', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-07-01T09:30:00'), coords: [-12.1025, -77.0289] },
+    ruta: [[-12.0400, -77.1000], [-12.0700, -77.0700], [-12.0900, -77.0450]],
+    eventos: [
+      { id: 'ev-17-1', tipo: 'alerta', coords: [-12.0600, -77.0800], direccion: 'Av. Colonial 820, Cercado', descripcion: '68 → 10 km/h', fecha: new Date('2026-07-01T08:10:00') },
+    ],
+  },
+  {
+    viajeId: '18',
+    placa: 'C9B-447', codigoMotor: '0934127856', rating: 3.3,
+    puntoA: { label: 'A', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-07-01T11:00:00'), coords: [-12.1025, -77.0289] },
+    puntoB: { label: 'B', direccion: 'Av. Túpac Amaru 3100, Comas',         fecha: new Date('2026-07-01T13:30:00'), coords: [-11.9400, -77.0600] },
+    ruta: [[-12.0700, -77.0450], [-12.0200, -77.0550], [-11.9700, -77.0580]],
+    eventos: [
+      { id: 'ev-18-1', tipo: 'exceso_velocidad', coords: [-12.0400, -77.0500], direccion: 'Panamericana Norte Km 8', descripcion: '91 km/h', fecha: new Date('2026-07-01T12:00:00') },
+      { id: 'ev-18-2', tipo: 'parada', coords: [-11.9600, -77.0570], direccion: 'Av. Universitaria 2800, Comas', descripcion: 'Parada no programada · 11 min', fecha: new Date('2026-07-01T13:00:00') },
+    ],
+  },
+
+  // Jun 30 · F7K-392
+  {
+    viajeId: '19',
+    placa: 'F7K-392', codigoMotor: '1293847562', rating: 3.5,
+    puntoA: { label: 'A', direccion: 'Av. El Sol 1050, La Molina',          fecha: new Date('2026-06-30T07:30:00'), coords: [-12.0832, -76.9394] },
+    puntoB: { label: 'B', direccion: 'Av. Alfredo Benavides 3866, Miraflores', fecha: new Date('2026-06-30T09:30:00'), coords: [-12.1197, -77.0295] },
+    ruta: [[-12.0950, -76.9700], [-12.1100, -76.9950], [-12.1150, -77.0100]],
+    eventos: [],
+  },
+  {
+    viajeId: '20',
+    placa: 'F7K-392', codigoMotor: '1293847562', rating: 4.0,
+    puntoA: { label: 'A', direccion: 'Av. Nicolás Ayllón 2408, Ate',        fecha: new Date('2026-06-30T16:00:00'), coords: [-12.0264, -76.9100] },
+    puntoB: { label: 'B', direccion: 'Av. Tomás Marsano 2800, Surquillo',   fecha: new Date('2026-06-30T17:30:00'), coords: [-12.1095, -77.0141] },
+    ruta: [[-12.0600, -76.9400], [-12.0900, -76.9700], [-12.1000, -76.9950]],
+    eventos: [],
+  },
+
+  // Jun 30 · A3M-156
+  {
+    viajeId: '21',
+    placa: 'A3M-156', codigoMotor: '5521034891', rating: 4.1,
+    puntoA: { label: 'A', direccion: 'Prolongación Huaylas 340, Chorrillos', fecha: new Date('2026-06-30T11:00:00'), coords: [-12.1560, -77.0190] },
+    puntoB: { label: 'B', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-06-30T12:45:00'), coords: [-12.1025, -77.0289] },
+    ruta: [[-12.1400, -77.0200], [-12.1200, -77.0250], [-12.1100, -77.0270]],
+    eventos: [],
+  },
+  {
+    viajeId: '22',
+    placa: 'A3M-156', codigoMotor: '5521034891', rating: 3.6,
+    puntoA: { label: 'A', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-06-30T14:00:00'), coords: [-12.1025, -77.0289] },
+    puntoB: { label: 'B', direccion: 'Av. Néstor Gambetta 3500, Callao',    fecha: new Date('2026-06-30T15:30:00'), coords: [-12.0200, -77.1200] },
+    ruta: [[-12.0800, -77.0500], [-12.0500, -77.0800], [-12.0350, -77.1000]],
+    eventos: [
+      { id: 'ev-22-1', tipo: 'reinicio', coords: [-12.0800, -77.0500], direccion: 'Av. Arequipa 4800, Miraflores', descripcion: 'Motor apagado y encendido', fecha: new Date('2026-06-30T14:25:00') },
+    ],
+  },
+
+  // Jun 29 · B5T-219
+  {
+    viajeId: '23',
+    placa: 'B5T-219', codigoMotor: '7762019345', rating: 4.0,
+    puntoA: { label: 'A', direccion: 'Av. Próceres de la Independencia 1580, SJL', fecha: new Date('2026-06-29T12:30:00'), coords: [-12.0219, -76.9977] },
+    puntoB: { label: 'B', direccion: 'Av. Néstor Gambetta 3500, Callao',    fecha: new Date('2026-06-29T14:30:00'), coords: [-12.0200, -77.1200] },
+    ruta: [[-12.0219, -77.0200], [-12.0210, -77.0600], [-12.0205, -77.0900]],
+    eventos: [],
+  },
+  {
+    viajeId: '24',
+    placa: 'B5T-219', codigoMotor: '7762019345', rating: 4.5,
+    puntoA: { label: 'A', direccion: 'Av. Néstor Gambetta 3500, Callao',    fecha: new Date('2026-06-29T16:00:00'), coords: [-12.0200, -77.1200] },
+    puntoB: { label: 'B', direccion: 'Av. Separadora Industrial 2450, Ate', fecha: new Date('2026-06-29T17:30:00'), coords: [-12.0264, -76.9100] },
+    ruta: [[-12.0210, -77.0800], [-12.0230, -77.0400], [-12.0250, -77.0000]],
+    eventos: [],
+  },
+
+  // Jun 29 · M8V-064
+  {
+    viajeId: '25',
+    placa: 'M8V-064', codigoMotor: '4481673920', rating: 4.7,
+    puntoA: { label: 'A', direccion: 'Av. Separadora Industrial 2450, Ate', fecha: new Date('2026-06-29T07:00:00'), coords: [-12.0264, -76.9100] },
+    puntoB: { label: 'B', direccion: 'Av. Alfredo Benavides 3866, Miraflores', fecha: new Date('2026-06-29T09:30:00'), coords: [-12.1197, -77.0295] },
+    ruta: [[-12.0500, -76.9400], [-12.0800, -76.9700], [-12.1100, -77.0100]],
+    eventos: [],
+  },
+  {
+    viajeId: '26',
+    placa: 'M8V-064', codigoMotor: '4481673920', rating: 4.8,
+    puntoA: { label: 'A', direccion: 'Av. Alfredo Benavides 3866, Miraflores', fecha: new Date('2026-06-29T10:30:00'), coords: [-12.1197, -77.0295] },
+    puntoB: { label: 'B', direccion: 'Av. Naranjal 890, Independencia',     fecha: new Date('2026-06-29T12:30:00'), coords: [-11.9900, -77.0534] },
+    ruta: [[-12.0900, -77.0350], [-12.0500, -77.0450], [-12.0200, -77.0500]],
+    eventos: [],
+  },
+
+  // Jun 26 · P1L-935
+  {
+    viajeId: '27',
+    placa: 'P1L-935', codigoMotor: '2109584736', rating: 4.3,
+    puntoA: { label: 'A', direccion: 'Av. Néstor Gambetta 3500, Callao',    fecha: new Date('2026-06-26T08:30:00'), coords: [-12.0200, -77.1200] },
+    puntoB: { label: 'B', direccion: 'Av. El Sol 1050, La Molina',          fecha: new Date('2026-06-26T10:30:00'), coords: [-12.0832, -76.9394] },
+    ruta: [[-12.0350, -77.0900], [-12.0550, -77.0300], [-12.0700, -76.9800]],
+    eventos: [],
+  },
+  {
+    viajeId: '28',
+    placa: 'P1L-935', codigoMotor: '2109584736', rating: 4.8,
+    puntoA: { label: 'A', direccion: 'Av. El Sol 1050, La Molina',          fecha: new Date('2026-06-26T14:00:00'), coords: [-12.0832, -76.9394] },
+    puntoB: { label: 'B', direccion: 'Av. Separadora Industrial 2450, Ate', fecha: new Date('2026-06-26T16:00:00'), coords: [-12.0264, -76.9100] },
+    ruta: [[-12.0700, -76.9300], [-12.0500, -76.9200], [-12.0350, -76.9150]],
+    eventos: [],
+  },
+
+  // Jun 26 · D4G-821
+  {
+    viajeId: '29',
+    placa: 'D4G-821', codigoMotor: '2847391020', rating: 4.2,
+    puntoA: { label: 'A', direccion: 'Av. República de Panamá 3055, San Isidro', fecha: new Date('2026-06-26T07:00:00'), coords: [-12.1025, -77.0289] },
+    puntoB: { label: 'B', direccion: 'Av. Angamos Este 1600, Surquillo',    fecha: new Date('2026-06-26T08:30:00'), coords: [-12.1095, -77.0141] },
+    ruta: [[-12.1050, -77.0250], [-12.1070, -77.0200]],
+    eventos: [],
+  },
+  {
+    viajeId: '30',
+    placa: 'D4G-821', codigoMotor: '2847391020', rating: 3.8,
+    puntoA: { label: 'A', direccion: 'Jr. Lampa 1035, Lima Cercado',        fecha: new Date('2026-06-26T15:00:00'), coords: [-12.0464, -77.0428] },
+    puntoB: { label: 'B', direccion: 'Av. Alfredo Benavides 3866, Miraflores', fecha: new Date('2026-06-26T16:30:00'), coords: [-12.1197, -77.0295] },
+    ruta: [[-12.0700, -77.0380], [-12.0950, -77.0330]],
+    eventos: [],
+  },
 ];

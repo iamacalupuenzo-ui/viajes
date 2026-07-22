@@ -21,7 +21,7 @@ export class MobileShellComponent {
   private readonly router = inject(Router);
 
   private isMapRoute(url: string): boolean {
-    return url.includes('/recorrido') || url.includes('/indicadores');
+    return url.includes('/viajes/recorrido') || url.includes('/indicadores');
   }
 
   readonly isFullscreen = toSignal(

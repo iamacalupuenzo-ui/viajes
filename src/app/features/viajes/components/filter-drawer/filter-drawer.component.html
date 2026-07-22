@@ -27,31 +27,33 @@
       />
     </div>
 
-    <!-- Period -->
-    <span class="drawer__section-label">Período</span>
-    <div class="drawer__chips">
-      @for (p of periods; track p.key) {
-        <button
-          class="drawer__chip"
-          [class.drawer__chip--active]="selectedPeriod() === p.key"
-          [class.drawer__chip--icon-only]="p.icon"
-          (click)="selectPeriod(p.key)"
-          [attr.aria-label]="p.label"
-          type="button"
-        >
-          @if (p.icon) {
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-              <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-              <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M9 11.5H14M11.5 9V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          } @else {
-            {{ p.label }}
-          }
-        </button>
-      }
-    </div>
+    <!-- Period (oculto en modo unidades-only) -->
+    @if (showPeriod()) {
+      <span class="drawer__section-label">Período</span>
+      <div class="drawer__chips">
+        @for (p of periods; track p.key) {
+          <button
+            class="drawer__chip"
+            [class.drawer__chip--active]="selectedPeriod() === p.key"
+            [class.drawer__chip--icon-only]="p.icon"
+            (click)="selectPeriod(p.key)"
+            [attr.aria-label]="p.label"
+            type="button"
+          >
+            @if (p.icon) {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M9 11.5H14M11.5 9V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            } @else {
+              {{ p.label }}
+            }
+          </button>
+        }
+      </div>
+    }
 
     <!-- Units list -->
     <div class="drawer__list">

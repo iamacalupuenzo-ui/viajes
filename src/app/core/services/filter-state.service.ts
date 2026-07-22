@@ -18,6 +18,7 @@ export class FilterStateService {
 
   readonly isOpen = signal(false);
   readonly activeConfig = signal<FilterConfig | null>(null);
+  readonly drawerShowPeriod = signal(true);
 
   readonly periodLabel = computed(() => {
     const cfg = this.activeConfig();
@@ -36,6 +37,13 @@ export class FilterStateService {
   });
 
   open(): void {
+    this.drawerShowPeriod.set(true);
+    this.isOpen.set(true);
+    this.tracker.emit('filtro_abierto');
+  }
+
+  openUnitsOnly(): void {
+    this.drawerShowPeriod.set(false);
     this.isOpen.set(true);
     this.tracker.emit('filtro_abierto');
   }

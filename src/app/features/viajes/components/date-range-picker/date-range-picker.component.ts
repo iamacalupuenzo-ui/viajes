@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, computed, OnChanges } from '@angular/core';
 
 interface CalendarDay {
   day: number | null;
@@ -7,6 +7,7 @@ interface CalendarDay {
   isStart: boolean;
   isEnd: boolean;
   isInRange: boolean;
+  isDisabled: boolean;
 }
 
 @Component({
@@ -17,21 +18,35 @@ interface CalendarDay {
   styleUrl: './date-range-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangePickerComponent {
-  isOpen = input<boolean>(false);
+export class DateRangePickerComponent implements OnChanges {
+  isOpen       = input<boolean>(false);
+  initialFrom  = input<Date | null>(null);
+  initialTo    = input<Date | null>(null);
+  submitLabel  = input<string>('Aplicar filtros');
+  maxRangeDays = input<number>(0); // 0 = sin límite
+
   close = output<void>();
   apply = output<{ from: Date; to: Date }>();
 
-  fromDate = signal<Date | null>(null);
-  toDate = signal<Date | null>(null);
+  fromDate     = signal<Date | null>(null);
+  toDate       = signal<Date | null>(null);
   currentMonth = signal(new Date());
 
-  // Drag-to-dismiss
   dragOffset = signal(0);
   private dragStartY = 0;
   private isDragging = false;
 
   readonly weekDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+
+  ngOnChanges(): void {
+    if (this.isOpen()) {
+      const from = this.initialFrom();
+      const to   = this.initialTo();
+      this.fromDate.set(from);
+      this.toDate.set(to);
+      this.currentMonth.set(from ?? new Date());
+    }
+  }
 
   monthLabel = computed(() => {
     const d = this.currentMonth();
@@ -40,10 +55,15 @@ export class DateRangePickerComponent {
     return `${months[d.getMonth()]} ${d.getFullYear()}`;
   });
 
-  weeks = computed(() => this.buildCalendar(this.currentMonth(), this.fromDate(), this.toDate()));
+  weeks    = computed(() => this.buildCalendar(this.currentMonth(), this.fromDate(), this.toDate()));
   fromLabel = computed(() => this.formatShort(this.fromDate()));
-  toLabel = computed(() => this.formatShort(this.toDate()));
-  canApply = computed(() => !!this.fromDate() && !!this.toDate());
+  toLabel   = computed(() => this.formatShort(this.toDate()));
+  canApply  = computed(() => !!this.fromDate() && !!this.toDate());
+
+  readonly limitLabel = computed(() => {
+    const max = this.maxRangeDays();
+    return max > 0 ? `Máx. ${max} días` : null;
+  });
 
   sheetStyle = computed(() => {
     const offset = this.dragOffset();
@@ -75,14 +95,30 @@ export class DateRangePickerComponent {
   }
 
   onDayClick(day: CalendarDay): void {
-    if (!day.date) return;
+    if (!day.date || day.isDisabled) return;
     const from = this.fromDate();
-    const to = this.toDate();
+    const to   = this.toDate();
+
     if (!from || (from && to)) {
+      // Inicio nuevo rango
       this.fromDate.set(day.date);
       this.toDate.set(null);
     } else {
-      day.date < from ? this.fromDate.set(day.date) : this.toDate.set(day.date);
+      if (day.date < from) {
+        // Clicked before start → reset start
+        this.fromDate.set(day.date);
+        this.toDate.set(null);
+      } else {
+        // Clicked after start → set end, clamped to maxRangeDays
+        const max = this.maxRangeDays();
+        if (max > 0) {
+          const maxTo = new Date(from);
+          maxTo.setDate(from.getDate() + max - 1);
+          this.toDate.set(day.date > maxTo ? maxTo : day.date);
+        } else {
+          this.toDate.set(day.date);
+        }
+      }
     }
   }
 
@@ -98,14 +134,23 @@ export class DateRangePickerComponent {
 
   onApply(): void {
     const from = this.fromDate();
-    const to = this.toDate();
+    const to   = this.toDate();
     if (from && to) this.apply.emit({ from, to });
   }
 
   private buildCalendar(month: Date, from: Date | null, to: Date | null): CalendarDay[][] {
     const year = month.getFullYear();
-    const m = month.getMonth();
+    const m    = month.getMonth();
     const today = new Date();
+    const max   = this.maxRangeDays();
+
+    // Calcular fecha límite cuando solo está definido el inicio
+    let limitDate: Date | null = null;
+    if (from && !to && max > 0) {
+      limitDate = new Date(from);
+      limitDate.setDate(from.getDate() + max - 1);
+    }
+
     let dow = new Date(year, m, 1).getDay();
     dow = dow === 0 ? 6 : dow - 1;
 
@@ -120,13 +165,15 @@ export class DateRangePickerComponent {
     for (let i = 0; i < cells.length; i += 7) {
       weeks.push(cells.slice(i, i + 7).map(d => {
         const date = d ? new Date(year, m, d) : null;
+        const isDisabled = !!date && !!limitDate && date > limitDate;
         return {
           day: d,
           date,
-          isStart: !!date && !!from && this.sameDay(date, from),
-          isEnd: !!date && !!to && this.sameDay(date, to),
+          isStart:   !!date && !!from && this.sameDay(date, from),
+          isEnd:     !!date && !!to   && this.sameDay(date, to),
           isInRange: !!date && !!from && !!to && date > from && date < to,
-          isToday: !!date && this.sameDay(date, today),
+          isToday:   !!date && this.sameDay(date, today),
+          isDisabled,
         };
       }));
     }
@@ -135,8 +182,8 @@ export class DateRangePickerComponent {
 
   private sameDay(a: Date, b: Date): boolean {
     return a.getFullYear() === b.getFullYear() &&
-           a.getMonth() === b.getMonth() &&
-           a.getDate() === b.getDate();
+           a.getMonth()    === b.getMonth()    &&
+           a.getDate()     === b.getDate();
   }
 
   private formatShort(date: Date | null): string {

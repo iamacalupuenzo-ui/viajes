@@ -13,7 +13,9 @@ import { DateRangePickerComponent } from '../date-range-picker/date-range-picker
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterDrawerComponent implements OnChanges {
-  isOpen = input<boolean>(false);
+  isOpen       = input<boolean>(false);
+  showPeriod   = input<boolean>(true);
+  initialPeriod = input<FilterPeriod>('todo');
   close = output<void>();
   apply = output<FilterConfig>();
 
@@ -88,7 +90,7 @@ export class FilterDrawerComponent implements OnChanges {
     if (this.isOpen()) {
       this.selectedIds.set(new Set(UNITS_MOCK.map(u => u.id)));
       this.searchQuery.set('');
-      this.selectedPeriod.set('todo');
+      this.selectedPeriod.set(this.initialPeriod());
       this.showDatePicker.set(false);
     }
   }
